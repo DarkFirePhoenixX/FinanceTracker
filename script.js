@@ -1347,3 +1347,53 @@ function isDateInPeriod(dateStr) {
 // balance.addEventListener("mouseleave", () => {
 //   document.getElementById("details").style.display = "none";
 // });
+
+document.addEventListener("keydown", function (e) {
+    // Block F12
+    if (e.key === "F12") { // F12 key
+        e.preventDefault();
+        return false;
+    }
+
+    // Block Ctrl + Shift + I (Developer Tools)
+    if (e.ctrlKey && e.shiftKey && e.key === "I") { // Ctrl + Shift + I
+        e.preventDefault();
+        return false;
+    }
+
+    // Block Ctrl + Shift + C (Inspect Element)
+    if (e.ctrlKey && e.shiftKey && e.key === "C") { // Ctrl + Shift + C
+        e.preventDefault();
+        return false;
+    }
+
+    // Block Ctrl + U (View Page Source)
+    if (e.ctrlKey && e.key === "u") { // Ctrl + U
+        e.preventDefault();
+        return false;
+    }
+
+    // Block Ctrl + Shift + J (Developer Tools Console tab)
+    if (e.ctrlKey && e.shiftKey && e.key === "J") { // Ctrl + Shift + J
+        e.preventDefault();
+        return false;
+    }
+
+    // Block Ctrl + Shift + F (Search in DevTools)
+    if (e.ctrlKey && e.shiftKey && e.key === "F") { // Ctrl + Shift + F
+        e.preventDefault();
+        return false;
+    }
+
+    // Block Ctrl + Alt + I (Developer Tools)
+    if (e.ctrlKey && e.altKey && e.key === "I") { // Ctrl + Alt + I
+        e.preventDefault();
+        return false;
+    }
+
+    // Block right-click (optional)
+    if (e.button === 2) { // Right-click
+        e.preventDefault();
+        return false;
+    }
+});

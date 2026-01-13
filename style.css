@@ -499,6 +499,11 @@ tr:nth-child(even) {
   overflow: hidden;
 }
 
+.developer {
+  text-align: end;
+  font-size: 11px;
+}
+
 /* .balance-wrapper {
   position: relative;
   display: inline-block;
