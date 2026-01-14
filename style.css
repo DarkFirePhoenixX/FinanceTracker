@@ -504,6 +504,10 @@ tr:nth-child(even) {
   font-size: 11px;
 }
 
+#forecastAmount, #amount, #incomeAmount {
+  width: 150px;
+}
+
 /* .balance-wrapper {
   position: relative;
   display: inline-block;

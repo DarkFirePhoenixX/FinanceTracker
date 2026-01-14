@@ -977,6 +977,13 @@ window.addEventListener("DOMContentLoaded", () => {
     const tabs = document.querySelectorAll(".tab");
     const savedTab = localStorage.getItem("currentTab");
     const savedPeriod = localStorage.getItem("period");
+    // Restore tab or set default
+    if (!savedTab) {
+        localStorage.setItem("currentTab", "tab1");
+    } else {
+        const index = Number(savedTab.replace("tab", "")) - 1;
+        tabs[index]?.click();
+    }
     if (!savedPeriod) return;
 
     let dates;
@@ -996,14 +1003,6 @@ window.addEventListener("DOMContentLoaded", () => {
 
     // ✅ This updates UI + fires onChange
     chartPicker.setDate(dates, true);
-
-    // Restore tab or set default
-    if (!savedTab) {
-        localStorage.setItem("currentTab", "tab1");
-    } else {
-        const index = Number(savedTab.replace("tab", "")) - 1;
-        tabs[index]?.click();
-    }
 
     // autoSortTables();
 
@@ -1231,28 +1230,28 @@ function parseBgMonthYear(str) {
     );
 }
 
-window.addEventListener("DOMContentLoaded", () => {
-    const savedPeriod = localStorage.getItem("period");
-    if (!savedPeriod) return;
+// window.addEventListener("DOMContentLoaded", () => {
+//     const savedPeriod = localStorage.getItem("period");
+//     if (!savedPeriod) return;
 
-    let dates;
+//     let dates;
 
-    if (savedPeriod.includes("-")) {
-        // Range: "Януари 2026 г. - Февруари 2026 г."
-        const [startStr, endStr] = savedPeriod.split(" - ");
-        dates = [
-            parseBgMonthYear(startStr),
-            parseBgMonthYear(endStr)
-        ];
-    } else {
-        // Single month: "Януари 2026 г."
-        const d = parseBgMonthYear(savedPeriod);
-        dates = [d, d];
-    }
+//     if (savedPeriod.includes("-")) {
+//         // Range: "Януари 2026 г. - Февруари 2026 г."
+//         const [startStr, endStr] = savedPeriod.split(" - ");
+//         dates = [
+//             parseBgMonthYear(startStr),
+//             parseBgMonthYear(endStr)
+//         ];
+//     } else {
+//         // Single month: "Януари 2026 г."
+//         const d = parseBgMonthYear(savedPeriod);
+//         dates = [d, d];
+//     }
 
-    // ✅ This updates UI + fires onChange
-    chartPicker.setDate(dates, true);
-});
+//     // ✅ This updates UI + fires onChange
+//     chartPicker.setDate(dates, true);
+// });
 
 function endOfMonth(date) {
     return new Date(date.getFullYear(), date.getMonth() + 1, 0, 23, 59, 59);
