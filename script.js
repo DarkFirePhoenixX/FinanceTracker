@@ -827,7 +827,7 @@ function showPopup(message, type = "success", allowClose = true) {
     closeBtn.onclick = () => {
         overlay.style.display = "none";
         if (
-            document.getElementById("balance").innerText == "0.00 EUR" || document.getElementById("forecastResult").innerText == document.getElementById("balance").innerText && document.getElementById("tab4").classList.contains("active")
+            document.getElementById("balance").innerText == "0.00 EUR"|| document.getElementById("forecastResult").innerText == "0.00 EUR"
         ) {
             location.reload();
         }
@@ -1015,7 +1015,7 @@ const currentBalanceText = document.getElementById("balance").innerText;
 const currentBalance = parseFloat(currentBalanceText.replace(/[^\d.-]/g, ""));
 
 function updateForecastBalance() {
-    let projected = currentBalance;
+    let projected = 0;
 
     forecastPlans.forEach(p => {
         if (p.type === "income") projected += p.amount;
@@ -1027,7 +1027,7 @@ function updateForecastBalance() {
 
     // Color the result
     const resultEl = document.getElementById("forecastResult");
-    resultEl.style.color = projected < 0 ? "red" : "green";
+    resultEl.style.color = projected === 0 ? "" : projected < 0 ? "red" : "green";
 
     updateForecastChart(currentBalance);
 }
@@ -1047,6 +1047,9 @@ function addForecast() {
     renderForecastTable();
     updateForecastBalance();
     updateForecastChart(currentBalance);
+    document.getElementById("forecastName").value = "";
+    document.getElementById("forecastAmount").value = "";
+    document.getElementById("forecastDate").value = "";
 }
 
 function removeForecast(index) {
@@ -1179,17 +1182,17 @@ function resetForecast() {
 
     // 2. Clear the table
     renderForecastTable();
+    saveAll();
+    updateForecastBalance();
+    futureHeader.classList.add("asc");
+    futureHeader.click();
+    localStorage.removeItem("forecasts");
 
-    // 3. Reset projected balance text
-    const resultEl = document.getElementById("forecastResult");
-    resultEl.innerText = document.getElementById("balance").innerText;
-    // resultEl.style.color = "#333"; // neutral color
     document.getElementById("forecastName").value = "";
     document.getElementById("forecastAmount").value = "";
     document.getElementById("forecastDate").value = "";
-    localStorage.removeItem("forecasts");
 
-    // 4. Remove the chart safely
+    // 3. Remove the chart safely
     if (forecastChart instanceof Chart) {
         forecastChart.destroy();
         forecastChart = null;
