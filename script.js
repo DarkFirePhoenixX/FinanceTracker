@@ -849,9 +849,9 @@ document.getElementById("importBtn").addEventListener("click", () => {
 // });
 
 // When a file is selected, run your OCR function
-document.getElementById("receiptInput").addEventListener("change", () => {
-    processReceipt();
-});
+// document.getElementById("receiptInput").addEventListener("change", () => {
+//     processReceipt();
+// });
 
 const button = document.getElementById("emojiButton");
 const pickerContainer = document.getElementById("pickerContainer");
@@ -1399,3 +1399,4 @@ document.addEventListener("keydown", function (e) {
     }
 
 });
+
