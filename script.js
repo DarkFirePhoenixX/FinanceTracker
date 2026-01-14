@@ -1351,6 +1351,10 @@ function isDateInPeriod(dateStr) {
 //   document.getElementById("details").style.display = "none";
 // });
 
+document.ondragstart = function(){return false;}
+document.oncontextmenu = function(){return false;}
+document.onselectstart = function(){return false;}
+
 document.addEventListener("keydown", function (e) {
     // Block F12
     if (e.key === "F12") { // F12 key
