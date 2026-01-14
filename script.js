@@ -844,9 +844,9 @@ document.getElementById("importBtn").addEventListener("click", () => {
     document.getElementById("importFile").click();
 });
 
-document.getElementById("receiptBtn").addEventListener("click", () => {
-    document.getElementById("receiptInput").click();
-});
+// document.getElementById("receiptBtn").addEventListener("click", () => {
+//     document.getElementById("receiptInput").click();
+// });
 
 // When a file is selected, run your OCR function
 document.getElementById("receiptInput").addEventListener("change", () => {
@@ -1397,4 +1397,5 @@ document.addEventListener("keydown", function (e) {
         e.preventDefault();
         return false;
     }
+
 });
