@@ -827,7 +827,7 @@ function showPopup(message, type = "success", allowClose = true) {
     closeBtn.onclick = () => {
         overlay.style.display = "none";
         if (
-            document.getElementById("balance").innerText == "0.00 EUR" || document.getElementById("forecastResult").innerText == "0.00 EUR"
+            document.getElementById("balance").innerText == "0.00 EUR" || document.getElementById("forecastResult").innerText == "0.00 EUR" && document.getElementById("tab4").classList.contains("active")
         ) {
             location.reload();
         }
@@ -1402,3 +1402,4 @@ document.addEventListener("keydown", function (e) {
     }
 
 });
+
