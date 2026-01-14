@@ -97,9 +97,9 @@ let originalScroll = 0;
 /* ---------------- ДОХОДИ ---------------- */
 
 function addIncome() {
-    const name = document.getElementById("incomeName").value;
+    const name = document.getElementById("incomeName").value.trim();
     const amount = parseFloat(
-        document.getElementById("incomeAmount").value
+        document.getElementById("incomeAmount").value.trim()
     );
     const date = document.getElementById("incomeDate").value;
     const incomePaymentStyle = document.getElementById("incomePaymentStyle").value;
@@ -523,9 +523,9 @@ document
     .addEventListener("submit", function (e) {
         e.preventDefault();
 
-        const date = document.getElementById("expenseDate").value;
-        const name = document.getElementById("name").value;
-        const amount = parseFloat(document.getElementById("amount").value);
+        const date = document.getElementById("expenseDate").value.trim();
+        const name = document.getElementById("name").value.trim();
+        const amount = parseFloat(document.getElementById("amount").value.trim());
         let expensePaymentStyle = document.getElementById("expensePaymentStyle").value;
         let category = document.getElementById("category").value;
         if (
@@ -1034,9 +1034,9 @@ function updateForecastBalance() {
 
 
 function addForecast() {
-    const type = document.getElementById("forecastType").value;
-    const name = document.getElementById("forecastName").value;
-    const amount = parseFloat(document.getElementById("forecastAmount").value);
+    const type = document.getElementById("forecastType").value.trim();
+    const name = document.getElementById("forecastName").value.trim();
+    const amount = parseFloat(document.getElementById("forecastAmount").value.trim());
     const date = document.getElementById("forecastDate").value;
 
     if (!name || !amount || !date) return;
@@ -1400,6 +1400,4 @@ document.addEventListener("keydown", function (e) {
         e.preventDefault();
         return false;
     }
-
 });
-
