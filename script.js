@@ -90,6 +90,7 @@ function saveAll() {
     // localStorage.setItem("subcategories", JSON.stringify(subcategories));
     localStorage.setItem("incomes", JSON.stringify(incomes));
     localStorage.setItem("forecasts", JSON.stringify(forecastPlans));
+    updatePeriodExpenseUI();
 }
 
 let originalScroll = 0;
