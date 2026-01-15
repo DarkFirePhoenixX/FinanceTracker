@@ -802,7 +802,7 @@ function importData(event) {
 
             showPopup("Данните са успешно заредени!", "success", () => { });
         } catch (err) {
-            showPopup("Грешен JSON файл", "error");
+            showPopup("Грешен формат на файл!", "error");
         }
     };
 
