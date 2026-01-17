@@ -169,11 +169,12 @@ tr:nth-child(even) {
   color: white;
 }
 
-#total,
+/* #total,
 #incomeTotal {
+  margin-top: 25px;
   font-size: 22px;
   font-weight: bold;
-}
+} */
 
 #balance,
 .balance {
@@ -181,16 +182,12 @@ tr:nth-child(even) {
   font-weight: bold;
 }
 
-#total,
-#incomeTotal {
-  margin-top: 25px;
-}
-
 #incomeMonthTotal,
 #expenseMonthTotal {
-  margin-top: 15px;
-  font-size: 18px;
-  font-weight: 400;
+  margin-top: 25px;
+  font-size: 22px;
+  /* font-weight: 400; */
+  font-weight: bold;
 }
 
 .income {

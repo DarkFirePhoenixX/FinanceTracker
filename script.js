@@ -176,18 +176,18 @@ function deleteIncome(index) {
     incomes.splice(index, 1);
     saveAll();
     updateIncomeTable();
-    updateIncomeTotal();
+    // updateIncomeTotal();
     updateBalance();
     updateCompareChart();
     incomeHeader.classList.add("asc");
     incomeHeader.click();
 }
 
-function updateIncomeTotal() {
-    const totalIncome = incomes.reduce((sum, inc) => sum + inc.amount, 0);
-    document.getElementById("incomeTotal").textContent =
-        "Общо приходи: " + totalIncome.toFixed(2) + " EUR";
-}
+// function updateIncomeTotal() {
+//     const totalIncome = incomes.reduce((sum, inc) => sum + inc.amount, 0);
+//     document.getElementById("incomeTotal").textContent =
+//         "Общо приходи: " + totalIncome.toFixed(2) + " EUR";
+// }
 
 /* ---------------- ПОДКАТЕГОРИИ ---------------- */
 
@@ -266,11 +266,11 @@ function updateTable() {
 }
 
 
-function updateTotal() {
-    const total = expenses.reduce((sum, exp) => sum + exp.amount, 0);
-    document.getElementById("total").textContent =
-        "Общо разходи: " + total.toFixed(2) + " EUR";
-}
+// function updateTotal() {
+//     const total = expenses.reduce((sum, exp) => sum + exp.amount, 0);
+//     document.getElementById("total").textContent =
+//         "Общо разходи: " + total.toFixed(2) + " EUR";
+// }
 
 function updateBalance() {
     const totalExpenses = expenses.reduce(
@@ -559,8 +559,8 @@ document
 
         saveAll();
         updateTable();
-        updateTotal();
-        updateIncomeTotal();
+        // updateTotal();
+        // updateIncomeTotal();
         updateBalance();
         updateChart();
         updateCompareChart();
@@ -580,8 +580,8 @@ function deleteExpense(index) {
     expenses.splice(index, 1);
     saveAll();
     updateTable();
-    updateTotal();
-    updateIncomeTotal();
+    // updateTotal();
+    // updateIncomeTotal();
     updateBalance();
     updateChart();
     updateCompareChart();
@@ -616,88 +616,88 @@ function editExpense(index) {
 
 /* ---------------- OCR КАСОВА БЕЛЕЖКА ---------------- */
 
-async function processReceipt() {
-    const file = document.getElementById("receiptInput").files[0];
-    document.getElementById("amount").value = "";
+// async function processReceipt() {
+//     const file = document.getElementById("receiptInput").files[0];
+//     document.getElementById("amount").value = "";
 
-    if (!file) {
-        showPopup("Моля, избери снимка на касова бележка.", "error");
-        return;
-    }
+//     if (!file) {
+//         showPopup("Моля, избери снимка на касова бележка.", "error");
+//         return;
+//     }
 
-    // Open popup with loading state
-    showPopup("Моля изчакайте...", "success", false);
+//     // Open popup with loading state
+//     showPopup("Моля изчакайте...", "success", false);
 
-    try {
-        const worker = await Tesseract.createWorker({
-            logger: (m) => {
-                if (m.status === "recognizing text") {
-                    updatePopup(`Сканиране: ${Math.round(m.progress * 100)}%`);
-                }
-            },
-        });
+//     try {
+//         const worker = await Tesseract.createWorker({
+//             logger: (m) => {
+//                 if (m.status === "recognizing text") {
+//                     updatePopup(`Сканиране: ${Math.round(m.progress * 100)}%`);
+//                 }
+//             },
+//         });
 
-        await worker.loadLanguage("eng");
-        await worker.initialize("eng");
+//         await worker.loadLanguage("eng");
+//         await worker.initialize("eng");
 
-        const { data } = await worker.recognize(file);
-        await worker.terminate();
+//         const { data } = await worker.recognize(file);
+//         await worker.terminate();
 
-        const text = data.text || "";
-        const amount = extractAmount(text);
+//         const text = data.text || "";
+//         const amount = extractAmount(text);
 
-        if (amount) {
-            const eur = (amount / 1.95583).toFixed(2);
-            document.getElementById("amount").value = eur;
+//         if (amount) {
+//             const eur = (amount / 1.95583).toFixed(2);
+//             document.getElementById("amount").value = eur;
 
-            updatePopup(`Разпозната сума: ${eur} EUR`);
-            document.getElementById("popupClose").style.display = "inline";
-        } else {
-            updatePopup("Неуспешно намиране на сума в касовата бележка.");
-            document.getElementById("popupClose").style.display = "inline";
-        }
-    } catch (err) {
-        console.error(err);
-        updatePopup("Възникна грешка при разпознаването.");
-        document.getElementById("popupClose").style.display = "inline";
-    }
-}
+//             updatePopup(`Разпозната сума: ${eur} EUR`);
+//             document.getElementById("popupClose").style.display = "inline";
+//         } else {
+//             updatePopup("Неуспешно намиране на сума в касовата бележка.");
+//             document.getElementById("popupClose").style.display = "inline";
+//         }
+//     } catch (err) {
+//         console.error(err);
+//         updatePopup("Възникна грешка при разпознаването.");
+//         document.getElementById("popupClose").style.display = "inline";
+//     }
+// }
 
-function extractAmount(text) {
-    const lines = text.split("\n").map((l) => l.toLowerCase());
-    const keywords = [
-        "total",
-        "общо",
-        "сума",
-        "сума евро",
-        "amount",
-        "total due",
-        "amount due",
-    ];
+// function extractAmount(text) {
+//     const lines = text.split("\n").map((l) => l.toLowerCase());
+//     const keywords = [
+//         "total",
+//         "общо",
+//         "сума",
+//         "сума евро",
+//         "amount",
+//         "total due",
+//         "amount due",
+//     ];
 
-    for (let line of lines) {
-        for (let key of keywords) {
-            if (line.includes(key)) {
-                const match = line.match(/(\d+[.,]\d{2})/);
-                if (match) return match[1].replace(",", ".");
-            }
-        }
-    }
+//     for (let line of lines) {
+//         for (let key of keywords) {
+//             if (line.includes(key)) {
+//                 const match = line.match(/(\d+[.,]\d{2})/);
+//                 if (match) return match[1].replace(",", ".");
+//             }
+//         }
+//     }
 
-    const allNumbers = text.match(/\d+[.,]\d{2}/g);
-    if (!allNumbers) return null;
+//     const allNumbers = text.match(/\d+[.,]\d{2}/g);
+//     if (!allNumbers) return null;
 
-    const nums = allNumbers.map((n) => parseFloat(n.replace(",", ".")));
-    return Math.max(...nums).toFixed(2);
-}
+//     const nums = allNumbers.map((n) => parseFloat(n.replace(",", ".")));
+//     return Math.max(...nums).toFixed(2);
+// }
 
 /* ---------------- ИНИЦИАЛИЗАЦИЯ ---------------- */
 
 // loadSubcategories();
 updateTable();
-updateTotal();
+// updateTotal();
 updateIncomeTable();
-updateIncomeTotal();
+// updateIncomeTotal();
 updateBalance();
 updateChart();
 updateCompareChart();
@@ -1311,8 +1311,8 @@ function updatePeriodIncomeUI() {
         ? "Приходи за текущия месец:"
         : "Приходи за текущия период:";
 
-    document.getElementById("incomeMonthTotal").textContent =
-        `${label} ${total.toFixed(2)} EUR`;
+    document.getElementById("incomeMonthTotal").innerHTML =
+        `${label} <span style="color: green;">+${total.toFixed(2)} EUR</span>`;
 }
 
 function updatePeriodExpenseUI() {
@@ -1326,8 +1326,8 @@ function updatePeriodExpenseUI() {
         ? "Разходи за текущия месец:"
         : "Разходи за текущия период:";
 
-    document.getElementById("expenseMonthTotal").textContent =
-        `${label} ${total.toFixed(2)} EUR`;
+    document.getElementById("expenseMonthTotal").innerHTML =
+        `${label} <span style="color: red;">-${total.toFixed(2)} EUR</span>`;
 }
 
 function isDateInPeriod(dateStr) {
