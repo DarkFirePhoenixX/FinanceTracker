@@ -75,6 +75,7 @@ let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
 //   JSON.parse(localStorage.getItem("subcategories")) || {};
 let incomes = JSON.parse(localStorage.getItem("incomes")) || [];
 let forecastPlans = JSON.parse(localStorage.getItem("forecasts")) || [];
+if(!localStorage.getItem("period")) {localStorage.setItem("period", document.getElementById("chartPeriodPicker").value)}
 
 let chart;
 let compareChart;
@@ -90,6 +91,7 @@ function saveAll() {
     // localStorage.setItem("subcategories", JSON.stringify(subcategories));
     localStorage.setItem("incomes", JSON.stringify(incomes));
     localStorage.setItem("forecasts", JSON.stringify(forecastPlans));
+    updatePeriodIncomeUI();
     updatePeriodExpenseUI();
 }
 
@@ -125,7 +127,8 @@ function addIncome() {
     document.getElementById("incomePaymentStyle").value = "Брой 💶";
 
     updateIncomeTable();
-    updateIncomeTotal();
+    // updateIncomeTotal();
+    // updatePeriodIncomeUI();
     updateBalance();
     updateCompareChart();
     incomeHeader.classList.add("asc");
@@ -552,8 +555,8 @@ document
 
         saveAll();
         updateTable();
+        // updatePeriodExpenseUI();
         // updateTotal();
-        // updateIncomeTotal();
         updateBalance();
         updateChart();
         updateCompareChart();
@@ -1331,7 +1334,8 @@ function updatePeriodIncomeUI() {
         : "Приходи за текущия период:";
 
     document.getElementById("incomeMonthTotal").innerHTML =
-        `${label} <span style="color: green;">+${total.toFixed(2)} EUR</span>`;
+        total === 0 ? `${label} ${total.toFixed(2)} EUR`
+            : `${label} <span style="color: green;">+${total.toFixed(2)} EUR</span>`;
 }
 
 function updatePeriodExpenseUI() {
@@ -1346,7 +1350,8 @@ function updatePeriodExpenseUI() {
         : "Разходи за текущия период:";
 
     document.getElementById("expenseMonthTotal").innerHTML =
-        `${label} <span style="color: red;">-${total.toFixed(2)} EUR</span>`;
+        total === 0 ? `${label} ${total.toFixed(2)} EUR`
+            : `${label} <span style="color: red;">-${total.toFixed(2)} EUR</span>`;
 }
 
 function isDateInPeriod(dateStr) {
@@ -1422,5 +1427,4 @@ document.addEventListener("keydown", function (e) {
         e.preventDefault();
         return false;
     }
-
 });
