@@ -285,7 +285,7 @@ function updateBalance() {
         balance.toFixed(2) + " EUR";
 
     document.getElementById("balance").style.color =
-        balance >= 0 ? "green" : "red";
+        (balance === 0) ? "black" : (balance > 0 ? "green" : "red");
 }
 
 function parseDateParts(dateStr) {
@@ -1422,4 +1422,5 @@ document.addEventListener("keydown", function (e) {
         e.preventDefault();
         return false;
     }
+
 });
