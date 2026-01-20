@@ -945,18 +945,21 @@ flatpickr("#incomeDate", {
     dateFormat: "d.m.Y",
     allowInput: true,
     locale: "bg",
+    defaultDate: new Date(date)
 });
 
 flatpickr("#expenseDate", {
     dateFormat: "d.m.Y",
     allowInput: true,
     locale: "bg",
+    defaultDate: new Date(date)
 });
 
 flatpickr("#forecastDate", {
     dateFormat: "d.m.Y",
     allowInput: true,
     locale: "bg",
+    defaultDate: new Date(date)
 });
 
 function autoSortTables() {

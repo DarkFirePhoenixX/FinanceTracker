@@ -85,10 +85,10 @@
       <div class="section-box">
         <h3>Добавяне на доход:</h3>
         <div style="display:flex; gap: 10px;">
-          <input type="text" id="incomeName" placeholder="Източник на доход (напр. Заплата)" style="width: 250px" />
-          <input type="number" id="incomeAmount" placeholder="Сума" />
-          <input type="text" id="incomeDate" placeholder="Избери дата" />
-          <select id="incomePaymentStyle">
+          <input type="text" id="incomeName" placeholder="Източник на доход (напр. Заплата)" style="width: 250px" required/>
+          <input type="number" id="incomeAmount" placeholder="Сума" required/>
+          <input type="text" id="incomeDate" placeholder="Избери дата" required/>
+          <select id="incomePaymentStyle" required>
             <option>Брой 💶</option>
             <option>Карта 💳</option>
             <option>Превод 🏛️</option>
@@ -148,7 +148,7 @@
           <input type="text" id="name" placeholder="Име на разход" required />
           <input type="number" step=".01" id="amount" placeholder="Сума" required />
 
-          <select id="category">
+          <select id="category" required>
             <option>Храна</option>
             <option>Транспорт</option>
             <option>Гориво</option>
@@ -161,7 +161,7 @@
             <option>Друго</option>
           </select>
 
-          <select id="expensePaymentStyle">
+          <select id="expensePaymentStyle" required>
             <option>Брой 💶</option>
             <option>Карта 💳</option>
             <option>Превод 🏛️</option>
@@ -174,7 +174,7 @@
                   <option value="">Без подкатегория</option>
                 </select> -->
 
-          <input type="text" id="expenseDate" placeholder="Избери дата" />
+          <input type="text" id="expenseDate" placeholder="Избери дата" required/>
 
           <button type="button" id="emojiButton">Персонализирана иконка</button>
           <div id="pickerContainer" style="display: none; position: absolute; z-index: 999"></div>
@@ -240,14 +240,14 @@
             </div>
 
             <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
-              <select id="forecastType">
+              <select id="forecastType" required>
                 <option value="income">Приход</option>
                 <option value="expense">Разход</option>
               </select>
 
-              <input type="text" id="forecastName" placeholder="Описание" />
-              <input type="number" id="forecastAmount" placeholder="Сума" />
-              <input type="text" id="forecastDate" placeholder="Избери дата" />
+              <input type="text" id="forecastName" placeholder="Описание" required/>
+              <input type="number" id="forecastAmount" placeholder="Сума" required/>
+              <input type="text" id="forecastDate" placeholder="Избери дата" required/>
 
               <button onclick="addForecast()">Добави план <i class="fa-solid fa-plus"></i></button>
               <button onclick="resetForecast()" style="background:#ff4d4d;">Изчисти всички 🗑️</button>
