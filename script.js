@@ -121,7 +121,7 @@ function addIncome() {
 
     document.getElementById("incomeName").value = "";
     document.getElementById("incomeAmount").value = "";
-    document.getElementById("incomeDate").value = "";
+    incomeDate.setDate(date, true);
     document.getElementById("incomePaymentStyle").value = "Брой 💶";
 
     updateIncomeTable();
@@ -478,8 +478,8 @@ function updateCompareChart() {
         data: {
             labels,
             datasets: [
-                { label: "Приходи", data: incomeData, backgroundColor: "green" },
-                { label: "Разходи", data: expenseData, backgroundColor: "red" }
+                { label: "Приходи (EUR)", data: incomeData, backgroundColor: "green" },
+                { label: "Разходи (EUR)", data: expenseData, backgroundColor: "red" }
             ]
         },
         options: {
@@ -504,17 +504,10 @@ function updateCompareChart() {
     });
 }
 
-
-
-
-
 function updateAllCharts() {
     updateChart();
     updateCompareChart();
 }
-
-
-
 
 /* ---------------- ФОРМА ЗА РАЗХОДИ ---------------- */
 
@@ -573,6 +566,7 @@ document
         document.getElementById("receiptInput").value = "";
         document.getElementById("ocrStatus").innerHTML = "";
         document.getElementById("emojiButton").innerText = "Персонализирана иконка";
+        expenseDate.setDate(date, true);
         showPopup("Данните бяха запазени успешно!");
     });
 
@@ -941,21 +935,21 @@ function parseDate(str) {
     return new Date(year, month - 1, day);
 }
 
-flatpickr("#incomeDate", {
+const incomeDate = flatpickr("#incomeDate", {
     dateFormat: "d.m.Y",
     allowInput: true,
     locale: "bg",
     defaultDate: new Date(date)
 });
 
-flatpickr("#expenseDate", {
+const expenseDate = flatpickr("#expenseDate", {
     dateFormat: "d.m.Y",
     allowInput: true,
     locale: "bg",
     defaultDate: new Date(date)
 });
 
-flatpickr("#forecastDate", {
+const forecastDate = flatpickr("#forecastDate", {
     dateFormat: "d.m.Y",
     allowInput: true,
     locale: "bg",
@@ -1017,7 +1011,7 @@ const currentBalanceText = document.getElementById("balance").innerText;
 const currentBalance = parseFloat(currentBalanceText.replace(/[^\d.-]/g, ""));
 
 function updateForecastBalance() {
-    let projected = 0;
+    let projected = currentBalance;
 
     forecastPlans.forEach(p => {
         if (p.type === "income") projected += p.amount;
@@ -1051,7 +1045,7 @@ function addForecast() {
     updateForecastChart(currentBalance);
     document.getElementById("forecastName").value = "";
     document.getElementById("forecastAmount").value = "";
-    document.getElementById("forecastDate").value = "";
+    forecastDate.setDate(date, true);
 }
 
 function removeForecast(index) {
@@ -1104,8 +1098,8 @@ function updateForecastChart(startBalance) {
 
     const now = new Date();
     const formattedDate =
-        String(now.getDate()).padStart(2, "0") + "-" +
-        String(now.getMonth() + 1).padStart(2, "0") + "-" +
+        String(now.getDate()).padStart(2, "0") + "." +
+        String(now.getMonth() + 1).padStart(2, "0") + "." +
         now.getFullYear();
 
 
@@ -1131,7 +1125,7 @@ function updateForecastChart(startBalance) {
         data: {
             labels,
             datasets: [{
-                label: "Баланс във времето",
+                label: "Баланс към даден момент (EUR)",
                 data: values,
 
                 // Line style
@@ -1151,7 +1145,7 @@ function updateForecastChart(startBalance) {
 
                 // Dynamic point colors (green for up, red for down)
                 pointBackgroundColor: values.map((v, i) => {
-                    if (i === 0) return "#0078ff"; // starting point
+                    if (i === 0) return "#0004ff"; // starting point
                     return v >= values[i - 1] ? "#4caf50" : "#ff4d4d";
                 }),
 
@@ -1164,16 +1158,38 @@ function updateForecastChart(startBalance) {
             responsive: false,
             maintainAspectRatio: false,
             animation: false,
+
             scales: {
                 y: {
-                    beginAtZero: false,
-                    grid: { color: "#dce3ef" }
-                },
-                x: {
-                    grid: { display: false }
+                    ticks: {
+                        callback: value => value + " €"
+                    }
+                }
+            },
+
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        title: function (items) {
+                            return items[0].label;
+                        },
+                        label: function (context) {
+                            const value = context.parsed.y.toLocaleString("en-US", {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2
+                            });
+                            if (context.dataIndex === 0) {
+                                return `Начален баланс: ${value} EUR`;
+                            } else {
+                                return `Баланс към дадения момент: ${value} EUR`;
+                            }
+                        }
+                    }
                 }
             }
         }
+
+
     });
 }
 
@@ -1192,7 +1208,7 @@ function resetForecast() {
 
     document.getElementById("forecastName").value = "";
     document.getElementById("forecastAmount").value = "";
-    document.getElementById("forecastDate").value = "";
+    forecastDate.setDate(date, true);
 
     // 3. Remove the chart safely
     if (forecastChart instanceof Chart) {
@@ -1354,9 +1370,9 @@ function isDateInPeriod(dateStr) {
 //   document.getElementById("details").style.display = "none";
 // });
 
-document.ondragstart = function(){return false;}
-document.oncontextmenu = function(){return false;}
-document.onselectstart = function(){return false;}
+document.ondragstart = function () { return false; }
+document.oncontextmenu = function () { return false; }
+document.onselectstart = function () { return false; }
 
 document.addEventListener("keydown", function (e) {
     // Block F12
