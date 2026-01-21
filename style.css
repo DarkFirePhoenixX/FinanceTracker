@@ -51,6 +51,10 @@ h1 {
   padding: 6px 12px;
 }
 
+.tab:hover {
+  color: #0078ff;
+}
+
 /* animated background layer */
 .tab::after {
   content: "";
@@ -58,7 +62,7 @@ h1 {
   inset: 0;
   background: #0078ff;
   transform: scaleY(0);
-  transform-origin: top;
+  transform-origin: center;
   transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 0;
 }
@@ -73,7 +77,7 @@ h1 {
 .tab.active {
   color: white;
   border-bottom: 3px solid #007bff;
-  margin-bottom: -13px;
+  margin-bottom: -14px;
   margin-inline: -5px;
 }
 
@@ -159,6 +163,35 @@ button {
   font-optical-sizing: auto;
   font-weight: 500;
   font-style: normal;
+  transition: all .3s;
+}
+
+/* input:focus, .border {
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 0 rgba(74, 144, 226, 0.6);
+  animation: focusGlow 0.3s forwards;
+  border-radius: 5px;
+  outline: none;
+} */
+
+@keyframes focusGlow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(74, 144, 226, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 8px 8px rgba(74, 144, 226, 0.5);
+  }
+}
+
+input:focus, .border {
+  transition: all .4s;
+  border-color: #4a90e2;
+  box-shadow:
+    0 0 4px rgba(74, 144, 226, 0.5),
+    0 0 8px rgba(74, 144, 226, 0.4),
+    0 0 16px rgba(74, 144, 226, 0.3);
+    outline: none;
+    border-radius: 5px;
 }
 
 button {
@@ -166,10 +199,12 @@ button {
   color: white;
   cursor: pointer;
   border: none;
+  transition: all .3s;
 }
 
 button:hover {
   filter: grayscale(30%);
+  transform: scale(1.05);
 }
 
 table {
@@ -271,7 +306,7 @@ tr:nth-child(even) {
 }
 
 #importBtn {
-  background-color: #25429a;
+  background-color: #7253c0;
   color: white;
   border: none;
   border-radius: 6px;
@@ -424,10 +459,6 @@ tr:nth-child(even) {
   color: #003cff;
 }
 
-#emojiButton {
-  background-color: rgb(46, 190, 203);
-}
-
 .topBar {
   display: flex;
   justify-content: space-between;
@@ -511,7 +542,7 @@ tr:nth-child(even) {
 }
 
 #forecastType {
-  width: 120px;
+  width: 150px;
 }
 
 #category {
@@ -535,7 +566,66 @@ tr:nth-child(even) {
 }
 
 #forecastAmount, #amount, #incomeAmount {
-  width: 150px;
+  width: 140px;
+}
+
+#incomeDate, #expenseDate, #forecastDate {
+  text-align: center;
+  width: 120px;
+}
+
+option[disabled] {
+  display: none;
+}
+
+.animated-select {
+  position: relative;
+  width: 200px;
+  font-family: inherit;
+}
+
+.animated-select .selected {
+  border: 1px solid #ccc;
+  cursor: pointer;
+  background: #fff;
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-family: "Roboto Condensed", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.animated-select .options {
+  position: absolute;
+  width: 100%;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-top: none;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: max-height 0.20s ease, opacity 0.25s ease, transform 0.25s ease;
+  z-index: 100;
+}
+
+.animated-select.open .options {
+  max-height: 420px;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.animated-select .options div {
+  padding: 10px;
+  cursor: pointer;
+  font-weight: 400;
+}
+
+.animated-select .options div:hover {
+  background: #f2f2f2;
 }
 
 /* .balance-wrapper {

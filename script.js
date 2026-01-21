@@ -75,7 +75,7 @@ let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
 //   JSON.parse(localStorage.getItem("subcategories")) || {};
 let incomes = JSON.parse(localStorage.getItem("incomes")) || [];
 let forecastPlans = JSON.parse(localStorage.getItem("forecasts")) || [];
-if(!localStorage.getItem("period")) {localStorage.setItem("period", document.getElementById("chartPeriodPicker").value)}
+if (!localStorage.getItem("period")) { localStorage.setItem("period", document.getElementById("chartPeriodPicker").value) }
 
 let chart;
 let compareChart;
@@ -106,7 +106,26 @@ function addIncome() {
     const date = document.getElementById("incomeDate").value;
     const incomePaymentStyle = document.getElementById("incomePaymentStyle").value;
 
-    if (!name || isNaN(amount) || !date || !incomePaymentStyle) return;
+    const isValid = validateForm([
+        {
+            isInvalid: () => !name,
+            message: "Моля въведете име на приход!"
+        },
+        {
+            isInvalid: () => !Number.isFinite(amount) || amount <= 0,
+            message: "Моля въведете валидна сума!"
+        },
+        {
+            isInvalid: () => document.getElementById("incomePaymentStyle").selectedIndex === 0,
+            message: "Моля изберете начин на усвояване от падащото меню!"
+        },
+        {
+            isInvalid: () => !date,
+            message: "Моля изберете дата на получаване!"
+        }
+    ]);
+
+    if (!isValid) return;
 
     // Convert DD-MM-YYYY → JS Date
     const [day, monthStr, year] = date.split(".");
@@ -124,7 +143,8 @@ function addIncome() {
     document.getElementById("incomeName").value = "";
     document.getElementById("incomeAmount").value = "";
     incomeDate.setDate(date, true);
-    document.getElementById("incomePaymentStyle").value = "Брой 💶";
+    document.getElementById("incomePaymentStyle").value = "Начин на усвояване 🔽";
+    document.getElementById("incomePaymentStyle").dispatchEvent(new Event("change"));
 
     updateIncomeTable();
     // updateIncomeTotal();
@@ -232,22 +252,7 @@ function updateTable() {
     const tbody = document.querySelector("#expenseTable tbody");
     tbody.innerHTML = "";
 
-    const symbols = {
-        Храна: "🍔",
-        Транспорт: "🚌",
-        Сметки: "💡",
-        Забавление: "🎉",
-        Наем: "🏠",
-        Пазаруване: "🛒",
-        Спорт: "⚽",
-        Екскурзии: "✈️",
-        Гориво: "⛽",
-        Други: "📦",
-    };
-
     expenses.forEach((exp, index) => {
-        const symbol = symbols[exp.category] || ""; // fallback if name not in list
-
         // Check if the date is inside the selected period
         const visible = isDateInPeriod(exp.date);
         const style = visible ? "" : "display:none;";
@@ -256,7 +261,7 @@ function updateTable() {
       <tr style="${style}">
         <td style="font-weight:400; color: darkblue;">${exp.date}</td>
         <td style="font-weight:400;">${exp.name}</td>
-        <td style="font-weight:400;">${exp.category} ${symbol}</td>
+        <td style="font-weight:400;">${exp.category}</td>
         <td class="expense">-${exp.amount.toFixed(2)} EUR</td>
         <td style="font-weight:500;">${exp.expensePaymentStyle}</td>
         <td>
@@ -524,14 +529,32 @@ document
         const amount = parseFloat(document.getElementById("amount").value.trim());
         let expensePaymentStyle = document.getElementById("expensePaymentStyle").value;
         let category = document.getElementById("category").value;
-        if (
-            document.getElementById("emojiButton").innerText !== "Персонализирана иконка"
-        ) {
-            category =
-                document.getElementById("category").value +
-                " " +
-                document.getElementById("emojiButton").innerText.split(": ")[1];
-        }
+
+        const isValid = validateForm([
+            {
+                isInvalid: () => !name,
+                message: "Моля въведете име на разход!"
+            },
+            {
+                isInvalid: () => !Number.isFinite(amount) || amount <= 0,
+                message: "Моля въведете валидна сума!"
+            },
+            {
+                isInvalid: () => document.getElementById("category").selectedIndex === 0,
+                message: "Моля изберете категория от падащото меню!"
+            },
+            {
+                isInvalid: () => document.getElementById("expensePaymentStyle").selectedIndex === 0,
+                message: "Моля изберете начин на плащане от падащото меню!"
+            },
+            {
+                isInvalid: () => !date,
+                message: "Моля изберете дата!"
+            }
+        ]);
+
+        if (!isValid) return;
+
         // const subcategory = document.getElementById("subcategory").value;
 
         if (editIndex !== null) {
@@ -562,13 +585,15 @@ document
         updateCompareChart();
         expenseHeader.classList.add("asc");
         expenseHeader.click();
-
+        document.getElementById("category").value = "Категория 🔽";
+        document.getElementById("category").dispatchEvent(new Event("change"));
+        document.getElementById("expensePaymentStyle").value = "Начин на плащане 🔽";
+        document.getElementById("expensePaymentStyle").dispatchEvent(new Event("change"));
         document.getElementById("expenseForm").reset();
 
         // 🧹 Изчистване на качената касова бележка и OCR съобщението
-        document.getElementById("receiptInput").value = "";
-        document.getElementById("ocrStatus").innerHTML = "";
-        document.getElementById("emojiButton").innerText = "Персонализирана иконка";
+        // document.getElementById("receiptInput").value = "";
+        // document.getElementById("ocrStatus").innerHTML = "";
         expenseDate.setDate(date, true);
         showPopup("Данните бяха запазени успешно!");
     });
@@ -592,13 +617,7 @@ function editExpense(index) {
     document.getElementById("expenseDate").value = exp.date;
     document.getElementById("name").value = exp.name;
     document.getElementById("amount").value = exp.amount;
-    document.getElementById("category").value = exp.category.split(" ")[0];
-    if (exp.category.split(" ")[1] === undefined) {
-        document.getElementById("emojiButton").innerText = "Персонализирана иконка";
-    } else {
-        document.getElementById("emojiButton").innerText =
-            "Текущо избрана икона: " + exp.category.split(" ")[1];
-    }
+    document.getElementById("category").value = exp.category;
     document.getElementById("expensePaymentStyle").value = exp.expensePaymentStyle;
     // loadSubcategories();
     // document.getElementById("subcategory").value = exp.subcategory;
@@ -821,12 +840,16 @@ function showPopup(message, type = "success", allowClose = true) {
 
     closeBtn.style.display = allowClose ? "inline" : "none";
 
+    closeBtn.style.background = type !== "success" ? "#e53935" : "#4caf50";
+
     closeBtn.onclick = () => {
         overlay.style.display = "none";
         if (
-            document.getElementById("balance").innerText == "0.00 EUR" || document.getElementById("forecastResult").innerText == "0.00 EUR" && document.getElementById("tab4").classList.contains("active")
+            // document.getElementById("balance").innerText == "0.00 EUR" || document.getElementById("forecastResult").innerText == "0.00 EUR" && document.getElementById("tab4").classList.contains("active")
+            document.getElementById("importFile").value != ""
         ) {
             location.reload();
+            document.getElementById("importFile").value = "";
         }
         window.scrollTo({ top: originalScroll, behavior: "smooth", block: "center" });
     };
@@ -849,54 +872,6 @@ document.getElementById("importBtn").addEventListener("click", () => {
 // document.getElementById("receiptInput").addEventListener("change", () => {
 //     processReceipt();
 // });
-
-const button = document.getElementById("emojiButton");
-const pickerContainer = document.getElementById("pickerContainer");
-
-let pickerVisible = false;
-let picker = null;
-
-button.addEventListener("click", () => {
-    pickerVisible = !pickerVisible;
-
-    if (pickerVisible) {
-        // Reset picker by recreating it
-        pickerContainer.innerHTML = "";
-
-        picker = new EmojiMart.Picker({
-            theme: "light",
-            onEmojiSelect: (emoji) => {
-                button.textContent = "Текущо избрана икона: " + emoji.native;
-                pickerContainer.style.display = "none";
-                pickerVisible = false;
-            },
-        });
-
-        pickerContainer.appendChild(picker);
-
-        // Position dropdown under button
-        const rect = button.getBoundingClientRect();
-        pickerContainer.style.left = rect.left + "px";
-        pickerContainer.style.top = rect.bottom + window.scrollY + "px";
-        pickerContainer.style.display = "block";
-    } else {
-        pickerContainer.style.display = "none";
-    }
-});
-
-// Close when clicking outside
-document.addEventListener("click", (e) => {
-    if (!pickerContainer.contains(e.target) && e.target !== button) {
-        pickerContainer.style.display = "none";
-        pickerVisible = false;
-    }
-});
-
-document.addEventListener("click", (e) => {
-    if (pickerVisible == true) {
-        document.getElementById("emojiButton").innerText = "Персонализирана иконка";
-    }
-});
 
 document.querySelectorAll("th[data-sort]").forEach((header) => {
     header.addEventListener("click", () => {
@@ -1033,12 +1008,31 @@ function updateForecastBalance() {
 
 
 function addForecast() {
-    const type = document.getElementById("forecastType").value.trim();
+    const type = document.getElementById("forecastType").value;
     const name = document.getElementById("forecastName").value.trim();
     const amount = parseFloat(document.getElementById("forecastAmount").value.trim());
     const date = document.getElementById("forecastDate").value;
 
-    if (!name || !amount || !date) return;
+    const isValid = validateForm([
+        {
+            isInvalid: () => document.getElementById("forecastType").selectedIndex === 0,
+            message: "Моля изберете категория от падащото меню!"
+        },
+        {
+            isInvalid: () => !name,
+            message: "Моля въведете кратко описание на приход/разход!"
+        },
+        {
+            isInvalid: () => !Number.isFinite(amount) || amount <= 0,
+            message: "Моля въведете валидна сума!"
+        },
+        {
+            isInvalid: () => !date,
+            message: "Моля изберете дата!"
+        }
+    ]);
+
+    if (!isValid) return;
 
     forecastPlans.push({ date, type, name, amount });
 
@@ -1048,6 +1042,8 @@ function addForecast() {
     updateForecastChart(currentBalance);
     document.getElementById("forecastName").value = "";
     document.getElementById("forecastAmount").value = "";
+    document.getElementById("forecastType").value = "Категория 🔽";
+    document.getElementById("forecastType").dispatchEvent(new Event("change"));
     forecastDate.setDate(date, true);
 }
 
@@ -1148,7 +1144,7 @@ function updateForecastChart(startBalance) {
 
                 // Dynamic point colors (green for up, red for down)
                 pointBackgroundColor: values.map((v, i) => {
-                    if (i === 0) return "#0004ff"; // starting point
+                    if (i === 0) return "#6a00ff"; // starting point
                     return v >= values[i - 1] ? "#4caf50" : "#ff4d4d";
                 }),
 
@@ -1211,13 +1207,16 @@ function resetForecast() {
 
     document.getElementById("forecastName").value = "";
     document.getElementById("forecastAmount").value = "";
+    document.getElementById("forecastType").value = "Категория 📙";
     forecastDate.setDate(date, true);
 
     // 3. Remove the chart safely
-    if (forecastChart instanceof Chart) {
+    if (forecastChart !== null) {
         forecastChart.destroy();
         forecastChart = null;
     }
+    renderForecastTable();
+    updateForecastBalance();
 }
 
 renderForecastTable();
@@ -1363,6 +1362,86 @@ function isDateInPeriod(dateStr) {
 
     return d >= start && d <= end;
 }
+
+function validateForm(rules, popupType = "error") {
+    for (const { isInvalid, message } of rules) {
+        if (isInvalid()) {
+            showPopup(message, popupType);
+            return false;
+        }
+    }
+    return true;
+}
+
+class AnimatedSelect {
+    constructor(selectEl) {
+        this.select = selectEl;
+        this.build();
+    }
+
+    build() {
+        this.select.style.display = "none";
+
+        this.wrapper = document.createElement("div");
+        this.wrapper.className = "animated-select";
+
+        this.selected = document.createElement("div");
+        this.selected.className = "selected";
+        this.selected.textContent =
+            this.select.options[this.select.selectedIndex]?.text;
+
+        this.options = document.createElement("div");
+        this.options.className = "options";
+
+        [...this.select.options].forEach((option, index) => {
+            if (option.disabled) return; // 🔥 skip placeholder
+
+            const opt = document.createElement("div");
+            opt.textContent = option.text;
+            opt.dataset.index = index;
+
+            opt.addEventListener("click", () => {
+                this.select.selectedIndex = index;
+                this.selected.textContent = option.text;
+                this.wrapper.classList.remove("open");
+                this.wrapper.classList.remove("border");
+            });
+
+            this.options.appendChild(opt);
+        });
+
+
+        this.wrapper.append(this.selected, this.options);
+        this.select.after(this.wrapper);
+
+        this.selected.addEventListener("click", () => {
+            this.wrapper.classList.toggle("open");
+            this.wrapper.classList.add("border");
+        });
+
+        document.addEventListener("click", e => {
+            if (!this.wrapper.contains(e.target)) {
+                this.wrapper.classList.remove("open");
+                this.wrapper.classList.remove("border");
+            }
+        });
+
+        this.select.addEventListener("change", () => {
+            const option = this.select.options[this.select.selectedIndex];
+
+            this.selected.textContent =
+                option?.text ||
+                this.select.querySelector("option[disabled]")?.text ||
+                "Изберете";
+        });
+
+    }
+}
+
+document.querySelectorAll("select").forEach(select => {
+    new AnimatedSelect(select);
+});
+
 
 // const balance = document.querySelector(".balance-wrapper");
 // const details = document.getElementById("details");

@@ -12,8 +12,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap"
     rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/emoji-mart@latest/dist/browser.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/emoji-mart@latest/css/emoji-mart.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/bg.js"></script>
@@ -38,8 +36,10 @@
     <div class="topBar">
       <!-- LEFT SIDE: TABS -->
       <div class="tabsLeft">
-        <div class="tab active" onclick="openTab(event, 'tab1')"><span>Приходи </span><span style="filter: hue-rotate(150deg);">📈</span></div>
-        <div class="tab" onclick="openTab(event, 'tab2')"><span>Разходи </span><span style="filter: hue-rotate(150deg)">📉</span></div>
+        <div class="tab active" onclick="openTab(event, 'tab1')"><span>Приходи </span><span
+            style="filter: hue-rotate(150deg);">📈</span></div>
+        <div class="tab" onclick="openTab(event, 'tab2')"><span>Разходи </span><span
+            style="filter: hue-rotate(150deg)">📉</span></div>
         <div class="tab" onclick="openTab(event, 'tab3')"><span>Диаграми 📊</span></div>
         <div class="tab" onclick="openTab(event, 'tab4')"><span>Бъдещи Планове 📅</span></div>
       </div>
@@ -85,18 +85,18 @@
       <div class="section-box">
         <h3>Добавяне на доход:</h3>
         <div style="display:flex; gap: 10px;">
-          <input type="text" id="incomeName" placeholder="Източник на доход (напр. Заплата)" style="width: 250px" required/>
-          <input type="number" id="incomeAmount" placeholder="Сума" required/>
-          <input type="text" id="incomeDate" placeholder="Избери дата" required/>
-          <select id="incomePaymentStyle" required>
-            <option>Брой 💶</option>
-            <option>Карта 💳</option>
-            <option>Превод 🏛️</option>
-            <option>Ваучер 🎫</option>
-            <option>Revolut ®️</option>
-            <option>Подарък 🎁</option>
-            <option>Друго 📦</option>
+          <input type="text" id="incomeName" placeholder="Име на приход (напр. Заплата)" style="width: 250px;" />
+          <input type="number" id="incomeAmount" placeholder="Сума (EUR)" step=".01" min="0.01" max="100000" />
+          <select id="incomePaymentStyle">
+            <option value="" disabled selected>Начин на усвояване 🔽</option>
+            <option value="cash">В брой 💶</option>
+            <option value="card">С карта 💳</option>
+            <option value="bank">Банков превод 🏛️</option>
+            <option value="voucher">С ваучер 🎫</option>
+            <option value="revolut">Чрез Revolut ®️</option>
+            <option value="other">Друго 📦</option>
           </select>
+          <input type="text" id="incomeDate" placeholder="Избери дата" />
           <button onclick="addIncome()" type="button">
             Добави / промени доход <i class="fa-solid fa-plus"></i>
           </button>
@@ -138,35 +138,37 @@
       <div class="section-box">
         <h3>Добавяне на разход:</h3>
 
-        <div style="margin-bottom: 15px">
+        <!-- <div style="margin-bottom: 15px">
           <input type="file" id="receiptInput" accept="image/*" style="display: none" />
 
           <div id="ocrStatus"></div>
-        </div>
+        </div> -->
 
         <form id="expenseForm">
-          <input type="text" id="name" placeholder="Име на разход" required />
-          <input type="number" step=".01" id="amount" placeholder="Сума" required />
+          <input type="text" id="name" placeholder="Име на разход (напр. Кауфланд)" style="width: 250px;" />
+          <input type="number" step=".01" id="amount" placeholder="Сума (EUR)" min="0.01" max="100000" />
 
-          <select id="category" required>
-            <option>Храна</option>
-            <option>Транспорт</option>
-            <option>Гориво</option>
-            <option>Наем</option>
-            <option>Сметки</option>
-            <option>Пазаруване</option>
-            <option>Спорт</option>
-            <option>Екскурзии</option>
-            <option>Забавления</option>
-            <option>Друго</option>
+          <select id="category">
+            <option disabled selected>Избор на категория 🔽</option>
+            <option>Храна 🍔</option>
+            <option>Транспорт 🚌</option>
+            <option>Гориво ⛽</option>
+            <option>Наем 🏠</option>
+            <option>Сметки 💡</option>
+            <option>Пазаруване 🛒</option>
+            <option>Спорт ⚽</option>
+            <option>Екскурзии ✈️</option>
+            <option>Забавления 🎉</option>
+            <option>Друго 📦</option>
           </select>
 
-          <select id="expensePaymentStyle" required>
-            <option>Брой 💶</option>
-            <option>Карта 💳</option>
-            <option>Превод 🏛️</option>
-            <option>Ваучер 🎫</option>
-            <option>Revolut ®️</option>
+          <select id="expensePaymentStyle">
+            <option disabled selected>Начин на плащане 🔽</option>
+            <option>В брой 💶</option>
+            <option>С карта 💳</option>
+            <option>Банков превод 🏛️</option>
+            <option>С ваучер 🎫</option>
+            <option>Чрез Revolut ®️</option>
             <option>Друго 📦</option>
           </select>
 
@@ -174,11 +176,7 @@
                   <option value="">Без подкатегория</option>
                 </select> -->
 
-          <input type="text" id="expenseDate" placeholder="Избери дата" required/>
-
-          <button type="button" id="emojiButton">Персонализирана иконка</button>
-          <div id="pickerContainer" style="display: none; position: absolute; z-index: 999"></div>
-
+          <input type="text" id="expenseDate" placeholder="Избери дата" />
           <!-- <button type="button" onclick="addSubcategory()">
                   Добави подкатегория
                 </button> -->
@@ -222,9 +220,6 @@
       </div>
     </div>
 
-
-
-
     <!-- ТАБ 4 -->
     <div id="tab4" class="tab-content">
       <div class="layout">
@@ -240,14 +235,16 @@
             </div>
 
             <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
-              <select id="forecastType" required>
-                <option value="income">Приход</option>
-                <option value="expense">Разход</option>
+              <select id="forecastType">
+                <option disabled selected>Избор на категория 🔽</option>
+                <option value="income">Приход 📈</option>
+                <option value="expense">Разход 📉</option>
               </select>
 
-              <input type="text" id="forecastName" placeholder="Описание" required/>
-              <input type="number" id="forecastAmount" placeholder="Сума" required/>
-              <input type="text" id="forecastDate" placeholder="Избери дата" required/>
+              <input type="text" id="forecastName" placeholder="Кратко описание (напр. Екскурзия)"
+                style="width: 250px;" />
+              <input type="number" id="forecastAmount" placeholder="Сума (EUR)" step=".01" min="0.01" max="100000" />
+              <input type="text" id="forecastDate" placeholder="Избери дата" />
 
               <button onclick="addForecast()">Добави план <i class="fa-solid fa-plus"></i></button>
               <button onclick="resetForecast()" style="background:#ff4d4d;">Изчисти всички 🗑️</button>
@@ -288,4 +285,5 @@
   </div>
   <script src="script.js"></script>
 </body>
+
 </html>
