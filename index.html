@@ -88,13 +88,13 @@
           <input type="text" id="incomeName" placeholder="Име на приход (напр. Заплата)" style="width: 250px;" />
           <input type="number" id="incomeAmount" placeholder="Сума (EUR)" step=".01" min="0.01" max="100000" />
           <select id="incomePaymentStyle">
-            <option value="" disabled selected>Начин на усвояване 🔽</option>
-            <option value="cash">В брой 💶</option>
-            <option value="card">С карта 💳</option>
-            <option value="bank">Банков превод 🏛️</option>
-            <option value="voucher">С ваучер 🎫</option>
-            <option value="revolut">Чрез Revolut ®️</option>
-            <option value="other">Друго 📦</option>
+            <option disabled selected>Начин на усвояване 🔽</option>
+            <option>В брой 💶</option>
+            <option>С карта 💳</option>
+            <option>Банков превод 🏛️</option>
+            <option>С ваучер 🎫</option>
+            <option>Чрез Revolut ®️</option>
+            <option>Друго 📦</option>
           </select>
           <input type="text" id="incomeDate" placeholder="Избери дата" />
           <button onclick="addIncome()" type="button">
