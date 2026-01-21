@@ -610,6 +610,7 @@ option[disabled] {
   transform: translateY(-6px);
   transition: max-height 0.20s ease, opacity 0.25s ease, transform 0.25s ease;
   z-index: 100;
+  border-radius: 5px;
 }
 
 .animated-select.open .options {
@@ -657,3 +658,4 @@ option[disabled] {
 .balance-wrapper:hover .balance-details {
   display: block;
 } */
+
