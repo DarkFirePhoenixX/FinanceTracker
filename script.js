@@ -7,7 +7,7 @@ function openTab(evt, tabId) {
         .querySelectorAll(".tab-content")
         .forEach((c) => c.classList.remove("active"));
 
-    evt.target.classList.add("active");
+    evt.currentTarget.classList.add("active");
     document.getElementById(tabId).classList.add("active");
     localStorage.setItem("currentTab", tabId);
 }

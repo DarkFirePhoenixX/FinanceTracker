@@ -38,10 +38,10 @@
     <div class="topBar">
       <!-- LEFT SIDE: TABS -->
       <div class="tabsLeft">
-        <div class="tab active" onclick="openTab(event, 'tab1')">Приходи 📈</div>
-        <div class="tab" onclick="openTab(event, 'tab2')">Разходи 📉</div>
-        <div class="tab" onclick="openTab(event, 'tab3')">Диаграми 📊</div>
-        <div class="tab" onclick="openTab(event, 'tab4')">Бъдещи Планове 📅</div>
+        <div class="tab active" onclick="openTab(event, 'tab1')"><span>Приходи </span><span style="filter: hue-rotate(150deg);">📈</span></div>
+        <div class="tab" onclick="openTab(event, 'tab2')"><span>Разходи </span><span style="filter: hue-rotate(150deg)">📉</span></div>
+        <div class="tab" onclick="openTab(event, 'tab3')"><span>Диаграми 📊</span></div>
+        <div class="tab" onclick="openTab(event, 'tab4')"><span>Бъдещи Планове 📅</span></div>
       </div>
 
       <!-- RIGHT SIDE: BALANCE + IMPORT/EXPORT -->
@@ -81,6 +81,7 @@
           </div> -->
 
     <!-- ТАБ 1 -->
+     <div class="tab-contents">
     <div id="tab1" class="tab-content active">
       <div class="section-box">
         <h3>Добавяне на доход:</h3>
@@ -107,7 +108,7 @@
         <div class="left-panel">
           <!-- ДОХОДИ -->
           <div class="section-box">
-            <h3>Приходи 📈</h3>
+            <h3>Приходи <span style="filter: hue-rotate(150deg);">📈</span></h3>
             <table id="incomeTable">
               <thead>
                 <tr>
@@ -189,7 +190,7 @@
       </div>
       </form>
       <div class="section-box">
-        <h3>Разходи 📉</h3>
+        <h3>Разходи <span style="filter: hue-rotate(150deg)">📉</span></h3>
         <table id="expenseTable">
           <thead>
             <tr>
@@ -270,6 +271,7 @@
               <tbody></tbody>
             </table>
           </div>
+        </div>
         </div>
 
         <!-- RIGHT PANEL: CHART -->

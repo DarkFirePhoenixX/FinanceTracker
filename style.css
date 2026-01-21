@@ -9,6 +9,7 @@ body {
   letter-spacing: 0.5px;
   font-style: normal;
   overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .container {
@@ -35,7 +36,9 @@ h1 {
 }
 
 .tab {
-  padding: 15px 30px;
+  position: relative;
+  z-index: 1;
+  /* padding: 15px 30px; */
   cursor: pointer;
   font-size: 18px;
   font-weight: bold;
@@ -43,19 +46,59 @@ h1 {
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
   margin-right: 10px;
+  overflow: hidden;
+  transition: color 0.3s ease;
+  padding: 6px 12px;
 }
 
-.tab.active {
+/* animated background layer */
+.tab::after {
+  content: "";
+  position: absolute;
+  inset: 0;
   background: #0078ff;
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 0;
+}
+
+/* make text sit above background */
+.tab > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* active state */
+.tab.active {
   color: white;
+  border-bottom: 3px solid #007bff;
+  margin-bottom: -13px;
+  margin-inline: -5px;
+}
+
+.tab.active::after {
+  transform: scaleY(1);
 }
 
 .tab-content {
-  display: none;
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+  position: absolute;
+  width: 100%;
+  transition: opacity 0.35s ease, transform 0.35s ease;
 }
 
 .tab-content.active {
-  display: block;
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  position: relative;
+}
+
+.tab-contents {
+  position: relative;
 }
 
 /* ЛЕЙАУТ */
@@ -410,18 +453,6 @@ tr:nth-child(even) {
   display: flex;
   align-items: center;
   gap: 10px;
-}
-
-.tab {
-  cursor: pointer;
-  padding: 6px 12px;
-}
-
-.tab.active {
-  border-bottom: 3px solid #007bff;
-  margin-bottom: -13px;
-  margin-inline: -5px;
-  /* pulls it down to connect perfectly */
 }
 
 /* Forecast table inherits your global table styles */
