@@ -83,19 +83,21 @@ h1 {
 
 .tab-content {
   opacity: 0;
-  transform: translateY(20px);
+  transform: translateY(-25px);
   pointer-events: none;
-  position: absolute;
-  width: 100%;
   transition: opacity 0.35s ease, transform 0.35s ease;
+  position: relative;
+  height: 0;
+  overflow: hidden;
 }
 
 .tab-content.active {
   opacity: 1;
   transform: translateY(0);
   pointer-events: auto;
-  position: relative;
+  height: auto;
 }
+
 
 .tab-contents {
   position: relative;
