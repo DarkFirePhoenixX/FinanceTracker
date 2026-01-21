@@ -102,11 +102,6 @@ h1 {
   height: auto;
 }
 
-.head-section {
-  display: flex;
-  justify-content: space-between;
-}
-
 /* .tab-contents {
   position: relative;
 } */
@@ -253,13 +248,6 @@ tr:nth-child(even) {
   color: white;
 }
 
-/* #total,
-#incomeTotal {
-  margin-top: 25px;
-  font-size: 22px;
-  font-weight: bold;
-} */
-
 #balance,
 .balance {
   font-size: 18px;
@@ -268,10 +256,10 @@ tr:nth-child(even) {
 
 #incomeMonthTotal,
 #expenseMonthTotal {
-  /* margin-top: 25px; */
-  font-size: 22px;
-  /* font-weight: 400; */
-  font-weight: bold;
+  margin-top: 20px;
+  margin-bottom: 30px;
+  font-weight: 450;
+  font-size: 20px;
 }
 
 .income {

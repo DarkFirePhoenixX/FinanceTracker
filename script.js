@@ -1065,7 +1065,7 @@ function renderForecastTable() {
 
         row.innerHTML = `
   <td style="font-weight:400; color: darkblue;">${p.date}</td>
-  <td style="font-weight:400;">${p.type === "income" ? "Приход 📈" : "Разход 📉"}</td>
+  <td style="font-weight:400;">${p.type === "income" ? "Приход 💲" : "Разход 🔻"}</td>
   <td style="font-weight:400;">${p.name}</td>
   <td class="${p.type === "income" ? "income" : "expense"}">
       ${p.type === "income" ? "+" : "-"}${p.amount.toFixed(2)} EUR
@@ -1329,8 +1329,8 @@ function updatePeriodIncomeUI() {
         periodStart.getFullYear() === periodEnd.getFullYear();
 
     const label = sameMonth
-        ? "Приходи за текущия месец:"
-        : "Приходи за текущия период:";
+        ? "За текущия месец:"
+        : "За текущия период:";
 
     document.getElementById("incomeMonthTotal").innerHTML =
         total === 0 ? `${label} ${total.toFixed(2)} EUR`
@@ -1345,8 +1345,8 @@ function updatePeriodExpenseUI() {
         periodStart.getFullYear() === periodEnd.getFullYear();
 
     const label = sameMonth
-        ? "Разходи за текущия месец:"
-        : "Разходи за текущия период:";
+        ? "За текущия месец:"
+        : "За текущия период:";
 
     document.getElementById("expenseMonthTotal").innerHTML =
         total === 0 ? `${label} ${total.toFixed(2)} EUR`
