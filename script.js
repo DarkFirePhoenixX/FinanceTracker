@@ -186,6 +186,7 @@ function editIncome(index) {
     document.getElementById("incomeName").value = inc.name;
     document.getElementById("incomeAmount").value = inc.amount;
     document.getElementById("incomePaymentStyle").value = inc.incomePaymentStyle;
+    document.getElementById("incomePaymentStyle").dispatchEvent(new Event("change"));
     editIncomeIndex = index;
     incomeHeader.classList.add("asc");
     incomeHeader.click();
@@ -618,7 +619,9 @@ function editExpense(index) {
     document.getElementById("name").value = exp.name;
     document.getElementById("amount").value = exp.amount;
     document.getElementById("category").value = exp.category;
+    document.getElementById("category").dispatchEvent(new Event("change"));
     document.getElementById("expensePaymentStyle").value = exp.expensePaymentStyle;
+    document.getElementById("expensePaymentStyle").dispatchEvent(new Event("change"));
     // loadSubcategories();
     // document.getElementById("subcategory").value = exp.subcategory;
     editIndex = index;
