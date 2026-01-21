@@ -1045,7 +1045,7 @@ function addForecast() {
     updateForecastChart(currentBalance);
     document.getElementById("forecastName").value = "";
     document.getElementById("forecastAmount").value = "";
-    document.getElementById("forecastType").value = "Категория 🔽";
+    document.getElementById("forecastType").value = "Избор на категория 🔽";
     document.getElementById("forecastType").dispatchEvent(new Event("change"));
     forecastDate.setDate(date, true);
 }
@@ -1210,7 +1210,8 @@ function resetForecast() {
 
     document.getElementById("forecastName").value = "";
     document.getElementById("forecastAmount").value = "";
-    document.getElementById("forecastType").value = "Категория 📙";
+    document.getElementById("forecastType").value = "Избор на категория 🔽";
+    document.getElementById("forecastType").dispatchEvent(new Event("change"));
     forecastDate.setDate(date, true);
 
     // 3. Remove the chart safely
