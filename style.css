@@ -78,6 +78,7 @@ h1 {
   color: white;
   border-bottom: 3px solid #007bff;
   margin-bottom: -14px;
+  /* margin-inline: -5px; */
 }
 
 .tab.active::after {
@@ -101,6 +102,10 @@ h1 {
   height: auto;
 }
 
+.head-section {
+  display: flex;
+  justify-content: space-between;
+}
 
 /* .tab-contents {
   position: relative;
@@ -263,7 +268,7 @@ tr:nth-child(even) {
 
 #incomeMonthTotal,
 #expenseMonthTotal {
-  margin-top: 25px;
+  /* margin-top: 25px; */
   font-size: 22px;
   /* font-weight: 400; */
   font-weight: bold;
@@ -612,7 +617,7 @@ option[disabled] {
 }
 
 .animated-select.open .options {
-  max-height: 420px;
+  max-height: 430px;
   opacity: 1;
   transform: translateY(0);
 }
@@ -656,5 +661,3 @@ option[disabled] {
 .balance-wrapper:hover .balance-details {
   display: block;
 } */
-
-

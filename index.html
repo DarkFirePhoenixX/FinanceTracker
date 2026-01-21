@@ -107,7 +107,10 @@
         <div class="left-panel">
           <!-- ДОХОДИ -->
           <div class="section-box">
+            <div class="head-section">
             <h3>Приходи <span style="filter: hue-rotate(150deg);">📈</span></h3>
+            <div id="incomeMonthTotal"> Приходи за текущия месец: 0.00 EUR</div>
+            </div>
             <table id="incomeTable">
               <thead>
                 <tr>
@@ -124,7 +127,7 @@
             </table>
 
             <!-- <div id="incomeTotal"> приходи: 0 EUR</div> -->
-            <div id="incomeMonthTotal"> Приходи за текущия месец: 0.00 EUR</div>
+            
           </div>
 
 
@@ -187,7 +190,10 @@
       </div>
       </form>
       <div class="section-box">
+        <div class="head-section">
         <h3>Разходи <span style="filter: hue-rotate(150deg)">📉</span></h3>
+        <div id="expenseMonthTotal"> Разходи за текущия месец: 0.00 EUR</div>
+        </div>
         <table id="expenseTable">
           <thead>
             <tr>
@@ -205,7 +211,6 @@
           <tbody></tbody>
         </table>
         <!-- <div id="total">Общо разходи: 0 EUR</div> -->
-        <div id="expenseMonthTotal"> Разходи за текущия месец: 0.00 EUR</div>
       </div>
     </div>
 
@@ -237,8 +242,8 @@
             <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
               <select id="forecastType">
                 <option disabled selected>Избор на категория 🔽</option>
-                <option value="income">Приход 📈</option>
-                <option value="expense">Разход 📉</option>
+                <option value="income">Приход 💲</option>
+                <option value="expense">Разход 🔻</option>
               </select>
 
               <input type="text" id="forecastName" placeholder="Кратко описание (напр. Екскурзия)"
