@@ -184,7 +184,7 @@ function editIncome(index) {
     const inc = incomes[index];
     document.getElementById("incomeDate").value = inc.date;
     document.getElementById("incomeName").value = inc.name;
-    document.getElementById("incomeAmount").value = inc.amount;
+    document.getElementById("incomeAmount").value = parseFloat(inc.amount).toFixed(2);;
     document.getElementById("incomePaymentStyle").value = inc.incomePaymentStyle;
     document.getElementById("incomePaymentStyle").dispatchEvent(new Event("change"));
     editIncomeIndex = index;
@@ -617,7 +617,7 @@ function editExpense(index) {
     const exp = expenses[index];
     document.getElementById("expenseDate").value = exp.date;
     document.getElementById("name").value = exp.name;
-    document.getElementById("amount").value = exp.amount;
+    document.getElementById("amount").value = parseFloat(exp.amount).toFixed(2);
     document.getElementById("category").value = exp.category;
     document.getElementById("category").dispatchEvent(new Event("change"));
     document.getElementById("expensePaymentStyle").value = exp.expensePaymentStyle;
@@ -1445,7 +1445,6 @@ class AnimatedSelect {
 document.querySelectorAll("select").forEach(select => {
     new AnimatedSelect(select);
 });
-
 
 // const balance = document.querySelector(".balance-wrapper");
 // const details = document.getElementById("details");
