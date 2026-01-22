@@ -248,6 +248,11 @@ tr:nth-child(even) {
   color: white;
 }
 
+.copy-btn {
+  background: #4caf50;
+  color: white;
+}
+
 #balance,
 .balance {
   font-size: 18px;
@@ -649,4 +654,3 @@ option[disabled] {
 .balance-wrapper:hover .balance-details {
   display: block;
 } */
-

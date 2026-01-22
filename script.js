@@ -170,8 +170,9 @@ function updateIncomeTable() {
         <td style="font-weight:400;">${inc.name} 💶</td>
         <td class="income">+${inc.amount.toFixed(2)} EUR</td>
         <td style="font-weight:500;">${inc.incomePaymentStyle}</td>
-        <td>
+        <td style="width: 350px;">
           <button class="edit-btn" onclick="editIncome(${index})">Редактирай ✏️</button>
+          <button class="copy-btn" onclick="copyIncome(${index})">Дублирай 📋</button>
           <button class="delete-btn" onclick="deleteIncome(${index})">Премахни 🗑️</button>
         </td>
       </tr>`;
@@ -184,10 +185,25 @@ function editIncome(index) {
     const inc = incomes[index];
     document.getElementById("incomeDate").value = inc.date;
     document.getElementById("incomeName").value = inc.name;
-    document.getElementById("incomeAmount").value = parseFloat(inc.amount).toFixed(2);;
+    document.getElementById("incomeAmount").value = parseFloat(inc.amount).toFixed(2);
     document.getElementById("incomePaymentStyle").value = inc.incomePaymentStyle;
     document.getElementById("incomePaymentStyle").dispatchEvent(new Event("change"));
     editIncomeIndex = index;
+    incomeHeader.classList.add("asc");
+    incomeHeader.click();
+    document.getElementById("incomeName").scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+    });
+}
+
+function copyIncome(index) {
+    originalScroll = window.scrollY;
+    const inc = incomes[index];
+    document.getElementById("incomeDate").value = inc.date;
+    document.getElementById("incomeName").value = inc.name;
+    document.getElementById("incomePaymentStyle").value = inc.incomePaymentStyle;
+    document.getElementById("incomePaymentStyle").dispatchEvent(new Event("change"));
     incomeHeader.classList.add("asc");
     incomeHeader.click();
     document.getElementById("incomeName").scrollIntoView({
@@ -265,8 +281,9 @@ function updateTable() {
         <td style="font-weight:400;">${exp.category}</td>
         <td class="expense">-${exp.amount.toFixed(2)} EUR</td>
         <td style="font-weight:500;">${exp.expensePaymentStyle}</td>
-        <td>
+        <td style="width: 350px;">
           <button class="edit-btn" onclick="editExpense(${index})">Редактирай ✏️</button>
+          <button class="copy-btn" onclick="copyExpense(${index})">Дублирай 📋</button>
           <button class="delete-btn" onclick="deleteExpense(${index})">Премахни 🗑️</button>
         </td>
       </tr>
@@ -625,6 +642,25 @@ function editExpense(index) {
     // loadSubcategories();
     // document.getElementById("subcategory").value = exp.subcategory;
     editIndex = index;
+    expenseHeader.classList.add("asc");
+    expenseHeader.click();
+    document.getElementById("name").scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+    });
+}
+
+function copyExpense(index) {
+    originalScroll = window.scrollY;
+    const exp = expenses[index];
+    document.getElementById("expenseDate").value = exp.date;
+    document.getElementById("name").value = exp.name;
+    document.getElementById("category").value = exp.category;
+    document.getElementById("category").dispatchEvent(new Event("change"));
+    document.getElementById("expensePaymentStyle").value = exp.expensePaymentStyle;
+    document.getElementById("expensePaymentStyle").dispatchEvent(new Event("change"));
+    // loadSubcategories();
+    // document.getElementById("subcategory").value = exp.subcategory;
     expenseHeader.classList.add("asc");
     expenseHeader.click();
     document.getElementById("name").scrollIntoView({
@@ -1509,5 +1545,4 @@ document.addEventListener("keydown", function (e) {
         e.preventDefault();
         return false;
     }
-
 });
