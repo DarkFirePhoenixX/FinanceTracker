@@ -87,9 +87,9 @@ h1 {
 
 .tab-content {
   opacity: 0;
-  transform: translateY(-25px);
+  transform: translateY(-50px);
   pointer-events: none;
-  transition: opacity 0.35s ease, transform 0.35s ease;
+  transition: opacity 0.45s ease, transform 0.45s ease;
   position: relative;
   height: 0;
   overflow: hidden;
@@ -649,3 +649,4 @@ option[disabled] {
 .balance-wrapper:hover .balance-details {
   display: block;
 } */
+
