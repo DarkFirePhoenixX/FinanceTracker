@@ -200,7 +200,6 @@ function editIncome(index) {
 function copyIncome(index) {
     originalScroll = window.scrollY;
     const inc = incomes[index];
-    document.getElementById("incomeDate").value = inc.date;
     document.getElementById("incomeName").value = inc.name;
     document.getElementById("incomePaymentStyle").value = inc.incomePaymentStyle;
     document.getElementById("incomePaymentStyle").dispatchEvent(new Event("change"));
@@ -653,7 +652,6 @@ function editExpense(index) {
 function copyExpense(index) {
     originalScroll = window.scrollY;
     const exp = expenses[index];
-    document.getElementById("expenseDate").value = exp.date;
     document.getElementById("name").value = exp.name;
     document.getElementById("category").value = exp.category;
     document.getElementById("category").dispatchEvent(new Event("change"));
@@ -1243,7 +1241,6 @@ function resetForecast() {
     futureHeader.classList.add("asc");
     futureHeader.click();
     localStorage.removeItem("forecasts");
-
     document.getElementById("forecastName").value = "";
     document.getElementById("forecastAmount").value = "";
     document.getElementById("forecastType").value = "Избор на категория 🔽";
