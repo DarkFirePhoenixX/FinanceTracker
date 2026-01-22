@@ -1459,7 +1459,7 @@ document.querySelectorAll("select").forEach(select => {
 
 document.ondragstart = function () { return false; }
 document.oncontextmenu = function () { return false; }
-document.onselectstart = function () { return false; }
+// document.onselectstart = function () { return false; }
 
 document.addEventListener("keydown", function (e) {
     // Block F12
@@ -1509,4 +1509,5 @@ document.addEventListener("keydown", function (e) {
         e.preventDefault();
         return false;
     }
+
 });
