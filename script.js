@@ -198,7 +198,7 @@ function editIncome(index) {
 }
 
 function copyIncome(index) {
-    originalScroll = window.scrollY;
+    // originalScroll = window.scrollY;
     const inc = incomes[index];
     document.getElementById("incomeName").value = inc.name;
     document.getElementById("incomePaymentStyle").value = inc.incomePaymentStyle;
@@ -650,7 +650,7 @@ function editExpense(index) {
 }
 
 function copyExpense(index) {
-    originalScroll = window.scrollY;
+    // originalScroll = window.scrollY;
     const exp = expenses[index];
     document.getElementById("name").value = exp.name;
     document.getElementById("category").value = exp.category;
