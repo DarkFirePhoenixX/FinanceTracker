@@ -1508,7 +1508,7 @@ function attachAmountFormatter(id, max = 100000) {
     });
 
     // Optional: select all on focus
-    el.addEventListener("focus", e => e.target.select());
+    // el.addEventListener("focus", e => e.target.select());
 }
 
 // Apply to all amount inputs
@@ -1578,4 +1578,5 @@ document.addEventListener("keydown", function (e) {
         e.preventDefault();
         return false;
     }
+
 });
