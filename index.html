@@ -12,11 +12,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap"
     rel="stylesheet" />
+      <!-- Flatpickr core -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/bg.js"></script>
-  <!-- Flatpickr core -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
   <!-- Bulgarian locale -->
   <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/bg.js"></script>
@@ -88,7 +88,7 @@
           <input type="text" id="incomeName" placeholder="Име на приход (напр. Заплата)" style="width: 250px;" />
           <!-- <input type="number" id="incomeAmount" placeholder="Сума (EUR)" step=".01" min="0.01" max="100000" /> -->
           <input type="text" id="incomeAmount" inputmode="decimal" autocomplete="off" placeholder="Сума (EUR)"/>
-          <select id="incomePaymentStyle">
+          <select id="incomePaymentStyle" class="custom-select">
             <option disabled selected>Начин на усвояване 🔽</option>
             <option>В брой 💶</option>
             <option>По карта 💳</option>
@@ -151,7 +151,7 @@
           <!-- <input type="number" step=".01" id="amount" placeholder="Сума (EUR)" min="0.01" max="100000" /> -->
           <input type="text" id="amount" inputmode="decimal" autocomplete="off" placeholder="Сума (EUR)"/>
 
-          <select id="category">
+          <select id="category" class="custom-select">
             <option disabled selected>Избор на категория 🔽</option>
             <option>Храна 🍔</option>
             <option>Транспорт 🚌</option>
@@ -165,7 +165,7 @@
             <option>Друго 📦</option>
           </select>
 
-          <select id="expensePaymentStyle">
+          <select id="expensePaymentStyle" class="custom-select">
             <option disabled selected>Начин на плащане 🔽</option>
             <option>В брой 💶</option>
             <option>С карта 💳</option>
@@ -238,7 +238,7 @@
             </div>
 
             <div style="margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
-              <select id="forecastType">
+              <select id="forecastType" class="custom-select">
                 <option disabled selected>Избор на категория 🔽</option>
                 <option value="income">Приход 💲</option>
                 <option value="expense">Разход 🔻</option>

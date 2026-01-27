@@ -184,7 +184,7 @@ function updateIncomeTable() {
 function editIncome(index) {
     originalScroll = window.scrollY;
     const inc = incomes[index];
-    document.getElementById("incomeDate").value = inc.date;
+    incomeDate.setDate(parseDMY(inc.date), false);
     document.getElementById("incomeName").value = inc.name;
     document.getElementById("incomeAmount").value = parseFloat(inc.amount).toFixed(2);
     document.getElementById("incomePaymentStyle").value = inc.incomePaymentStyle;
@@ -634,7 +634,8 @@ function deleteExpense(index) {
 function editExpense(index) {
     originalScroll = window.scrollY;
     const exp = expenses[index];
-    document.getElementById("expenseDate").value = exp.date;
+    // document.getElementById("expenseDate").value = exp.date;
+    expenseDate.setDate(parseDMY(exp.date), false);
     document.getElementById("name").value = exp.name;
     document.getElementById("amount").value = parseFloat(exp.amount).toFixed(2);
     document.getElementById("category").value = exp.category;
@@ -1472,7 +1473,7 @@ class AnimatedSelect {
     }
 }
 
-document.querySelectorAll("select").forEach(select => {
+document.querySelectorAll("select.custom-select").forEach(select => {
     new AnimatedSelect(select);
 });
 
@@ -1578,5 +1579,4 @@ document.addEventListener("keydown", function (e) {
         e.preventDefault();
         return false;
     }
-
 });
