@@ -14,6 +14,7 @@ function openTab(evt, tabId) {
 
 let selectedChartMonth = new Date().getMonth(); // 0–11
 let selectedChartYear = new Date().getFullYear();
+let forecastChart = null;
 
 const now = new Date();
 const firstOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -112,7 +113,7 @@ function addIncome() {
             message: "Моля въведете име на приход!"
         },
         {
-            isInvalid: () => !Number.isFinite(amount) || amount <= 0,
+            isInvalid: () => !Number.isFinite(amount) || amount <= 0 || amount > 100000,
             message: "Моля въведете валидна сума!"
         },
         {
@@ -311,6 +312,8 @@ function updateBalance() {
 
     document.getElementById("balance").style.color =
         (balance === 0) ? "black" : (balance > 0 ? "green" : "red");
+
+        updateForecastBalance();
 }
 
 function parseDateParts(dateStr) {
@@ -517,7 +520,7 @@ function updateCompareChart() {
                         label: function (context) {
                             const label = context.dataset.label || "";
                             const value = context.parsed.y ?? context.raw;
-                            return `Общо ${label.toLowerCase()}: ${value.toFixed(2)} EUR`;
+                            return `Общо ${label.toLowerCase().replace("(eur)", "").slice(0, -1)}: ${value.toFixed(2)} EUR`;  
                         }
                     }
                 }
@@ -553,7 +556,7 @@ document
                 message: "Моля въведете име на разход!"
             },
             {
-                isInvalid: () => !Number.isFinite(amount) || amount <= 0,
+                isInvalid: () => !Number.isFinite(amount) || amount <= 0 || amount > 100000,
                 message: "Моля въведете валидна сума!"
             },
             {
@@ -1020,27 +1023,21 @@ window.addEventListener("DOMContentLoaded", () => {
 
 });
 
-let forecastChart = null;
-
-const currentBalanceText = document.getElementById("balance").innerText;
-const currentBalance = parseFloat(currentBalanceText.replace(/[^\d.-]/g, ""));
+// const currentBalanceText = document.getElementById("balance").innerText;
+// let currentBalance = parseFloat(currentBalanceText.replace(/[^\d.-]/g, ""));
 
 function updateForecastBalance() {
-    let projected = currentBalance;
+    let projected = getCurrentBalance(); // ✅ live balance
 
     forecastPlans.forEach(p => {
-        if (p.type === "income") projected += p.amount;
-        else projected -= p.amount;
+        projected += p.type === "income" ? p.amount : -p.amount;
     });
 
-    document.getElementById("forecastResult").innerText =
-        projected.toFixed(2) + " EUR";
-
-    // Color the result
     const resultEl = document.getElementById("forecastResult");
+    resultEl.innerText = projected.toFixed(2) + " EUR";
     resultEl.style.color = projected === 0 ? "" : projected < 0 ? "red" : "green";
 
-    updateForecastChart(currentBalance);
+    updateForecastChart(getCurrentBalance());
 }
 
 
@@ -1060,7 +1057,7 @@ function addForecast() {
             message: "Моля въведете кратко описание на приход/разход!"
         },
         {
-            isInvalid: () => !Number.isFinite(amount) || amount <= 0,
+            isInvalid: () => !Number.isFinite(amount) || amount <= 0 || amount > 100000,
             message: "Моля въведете валидна сума!"
         },
         {
@@ -1076,7 +1073,7 @@ function addForecast() {
     saveAll()
     renderForecastTable();
     updateForecastBalance();
-    updateForecastChart(currentBalance);
+    updateForecastChart(getCurrentBalance());
     document.getElementById("forecastName").value = "";
     document.getElementById("forecastAmount").value = "";
     document.getElementById("forecastType").value = "Избор на категория 🔽";
@@ -1478,6 +1475,45 @@ class AnimatedSelect {
 document.querySelectorAll("select").forEach(select => {
     new AnimatedSelect(select);
 });
+
+function getCurrentBalance() {
+    const totalIncome = incomes.reduce((s, i) => s + i.amount, 0);
+    const totalExpenses = expenses.reduce((s, e) => s + e.amount, 0);
+    return totalIncome - totalExpenses;
+}
+
+function attachAmountFormatter(id, max = 100000) {
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    el.addEventListener("blur", (e) => {
+        let value = e.target.value.trim();
+        if (!value) return;
+
+        // Normalize decimal separator
+        value = value.replace(",", ".");
+
+        let num = Number(value);
+        if (!Number.isFinite(num)) {
+            e.target.value = "";
+            return;
+        }
+
+        // Clamp to max
+        if (num > max) num = max;
+        if (num < 0) num = 0.01;
+
+        // Format output (BG style)
+        e.target.value = num.toFixed(2).replace(".", ",");
+    });
+
+    // Optional: select all on focus
+    el.addEventListener("focus", e => e.target.select());
+}
+
+// Apply to all amount inputs
+["amount", "incomeAmount", "forecastAmount"]
+    .forEach(id => attachAmountFormatter(id, 100000));
 
 // const balance = document.querySelector(".balance-wrapper");
 // const details = document.getElementById("details");
