@@ -101,7 +101,7 @@ let originalScroll = 0;
 
 function addIncome() {
     const name = document.getElementById("incomeName").value.trim();
-    const amount = parseFloat(
+    const amount = parseAmount(
         document.getElementById("incomeAmount").value.trim()
     );
     const date = document.getElementById("incomeDate").value;
@@ -546,7 +546,7 @@ document
 
         const date = document.getElementById("expenseDate").value.trim();
         const name = document.getElementById("name").value.trim();
-        const amount = parseFloat(document.getElementById("amount").value.trim());
+        const amount = parseAmount(document.getElementById("amount").value.trim());
         let expensePaymentStyle = document.getElementById("expensePaymentStyle").value;
         let category = document.getElementById("category").value;
 
@@ -1045,7 +1045,7 @@ function updateForecastBalance() {
 function addForecast() {
     const type = document.getElementById("forecastType").value;
     const name = document.getElementById("forecastName").value.trim();
-    const amount = parseFloat(document.getElementById("forecastAmount").value.trim());
+    const amount = parseAmount(document.getElementById("forecastAmount").value.trim());
     const date = document.getElementById("forecastDate").value;
 
     const isValid = validateForm([
@@ -1491,8 +1491,17 @@ function attachAmountFormatter(id, max = 100000) {
         let value = e.target.value.trim();
         if (!value) return;
 
-        // Normalize decimal separator
-        value = value.replace(",", ".");
+        // Normalize decimal separator (EU → JS)
+        value = value.replace(/,/g, ".");
+
+        // Remove everything except digits and dot
+        value = value.replace(/[^0-9.]/g, "");
+
+        // Allow only one dot
+        const parts = value.split(".");
+        if (parts.length > 2) {
+            value = parts[0] + "." + parts.slice(1).join("");
+        }
 
         let num = Number(value);
         if (!Number.isFinite(num)) {
@@ -1500,21 +1509,28 @@ function attachAmountFormatter(id, max = 100000) {
             return;
         }
 
-        // Clamp to max
+        // Clamp
         if (num > max) num = max;
         if (num < 0) num = 0.01;
 
-        // Format output (BG style)
+        // Format BG style
         e.target.value = num.toFixed(2).replace(".", ",");
     });
-
-    // Optional: select all on focus
-    // el.addEventListener("focus", e => e.target.select());
 }
 
 // Apply to all amount inputs
 ["amount", "incomeAmount", "forecastAmount"]
     .forEach(id => attachAmountFormatter(id, 100000));
+
+function parseAmount(value) {
+    if (!value) return NaN;
+    return Number(
+        value
+            .trim()
+            .replace(/,/g, ".")
+            .replace(/[^0-9.]/g, "")
+    );
+}
 
 // const balance = document.querySelector(".balance-wrapper");
 // const details = document.getElementById("details");
