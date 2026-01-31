@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap"
     rel="stylesheet" />
-      <!-- Flatpickr core -->
+  <!-- Flatpickr core -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -87,7 +87,7 @@
         <div style="display:flex; gap: 10px;">
           <input type="text" id="incomeName" placeholder="Име на приход (напр. Заплата)" style="width: 250px;" />
           <!-- <input type="number" id="incomeAmount" placeholder="Сума (EUR)" step=".01" min="0.01" max="100000" /> -->
-          <input type="text" id="incomeAmount" inputmode="decimal" autocomplete="off" placeholder="Сума (EUR)"/>
+          <input type="text" id="incomeAmount" inputmode="decimal" autocomplete="off" placeholder="Сума (EUR)" />
           <select id="incomePaymentStyle" class="custom-select">
             <option disabled selected>Начин на усвояване 🔽</option>
             <option>В брой 💶</option>
@@ -101,6 +101,7 @@
           <button onclick="addIncome()" type="button">
             Добави / промени доход <i class="fa-solid fa-plus"></i>
           </button>
+          <input type="text" id="incomeSearch" class="table-search" placeholder="Търсене..." data-table="incomeTable">
         </div>
       </div>
 
@@ -149,7 +150,7 @@
         <form id="expenseForm">
           <input type="text" id="name" placeholder="Име на разход (напр. Кауфланд)" style="width: 250px;" />
           <!-- <input type="number" step=".01" id="amount" placeholder="Сума (EUR)" min="0.01" max="100000" /> -->
-          <input type="text" id="amount" inputmode="decimal" autocomplete="off" placeholder="Сума (EUR)"/>
+          <input type="text" id="amount" inputmode="decimal" autocomplete="off" placeholder="Сума (EUR)" />
 
           <select id="category" class="custom-select">
             <option disabled selected>Избор на категория 🔽</option>
@@ -187,6 +188,7 @@
           <!-- <button type="button" id="receiptBtn">
             Прикачи касова бележка 🧾
           </button> -->
+          <input type="text" id="expenseSearch" class="table-search" placeholder="Търсене..." data-table="expenseTable">
       </div>
       </form>
       <div class="section-box">
@@ -247,7 +249,7 @@
               <input type="text" id="forecastName" placeholder="Кратко описание (напр. Екскурзия)"
                 style="width: 230px;" />
               <!-- <input type="number" id="forecastAmount" placeholder="Сума (EUR)" step=".01" min="0.01" max="100000" /> -->
-              <input type="text" id="forecastAmount" inputmode="decimal" autocomplete="off" placeholder="Сума (EUR)"/>
+              <input type="text" id="forecastAmount" inputmode="decimal" autocomplete="off" placeholder="Сума (EUR)" />
               <input type="text" id="forecastDate" placeholder="Избери дата" />
 
               <button onclick="addForecast()">Добави план <i class="fa-solid fa-plus"></i></button>

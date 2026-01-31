@@ -143,7 +143,7 @@ function addIncome() {
 
     document.getElementById("incomeName").value = "";
     document.getElementById("incomeAmount").value = "";
-    incomeDate.setDate(date, true);
+    incomeDate.setDate(new Date(), true);
     document.getElementById("incomePaymentStyle").value = "Начин на усвояване 🔽";
     document.getElementById("incomePaymentStyle").dispatchEvent(new Event("change"));
 
@@ -313,7 +313,7 @@ function updateBalance() {
     document.getElementById("balance").style.color =
         (balance === 0) ? "black" : (balance > 0 ? "green" : "red");
 
-        updateForecastBalance();
+    updateForecastBalance();
 }
 
 function parseDateParts(dateStr) {
@@ -520,7 +520,7 @@ function updateCompareChart() {
                         label: function (context) {
                             const label = context.dataset.label || "";
                             const value = context.parsed.y ?? context.raw;
-                            return `Общо ${label.toLowerCase().replace("(eur)", "").slice(0, -1)}: ${value.toFixed(2)} EUR`;  
+                            return `Общо ${label.toLowerCase().replace("(eur)", "").slice(0, -1)}: ${value.toFixed(2)} EUR`;
                         }
                     }
                 }
@@ -614,7 +614,7 @@ document
         // 🧹 Изчистване на качената касова бележка и OCR съобщението
         // document.getElementById("receiptInput").value = "";
         // document.getElementById("ocrStatus").innerHTML = "";
-        expenseDate.setDate(date, true);
+        expenseDate.setDate(new Date(), true);
         showPopup("Данните бяха запазени успешно!");
     });
 
@@ -1079,7 +1079,7 @@ function addForecast() {
     document.getElementById("forecastAmount").value = "";
     document.getElementById("forecastType").value = "Избор на категория 🔽";
     document.getElementById("forecastType").dispatchEvent(new Event("change"));
-    forecastDate.setDate(date, true);
+    forecastDate.setDate(new Date(), true);
 }
 
 function removeForecast(index) {
@@ -1531,6 +1531,121 @@ function parseAmount(value) {
             .replace(/[^0-9.]/g, "")
     );
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+
+  /* ---------- helpers ---------- */
+
+  function debounce(fn, delay = 250) {
+    let timer;
+    return function (...args) {
+      clearTimeout(timer);
+      timer = setTimeout(() => fn.apply(this, args), delay);
+    };
+  }
+
+  function normalize(text) {
+    return text
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+  }
+
+  /* ---------- core reusable initializer ---------- */
+
+  function initTableSearch(input) {
+    const tableId = input.dataset.table;
+    const table = document.getElementById(tableId);
+    const tbody = table.querySelector("tbody");
+
+    function markOriginallyHiddenRows() {
+      tbody.querySelectorAll("tr").forEach(row => {
+        if (row.style.display === "none") {
+          row.dataset.originalHidden = "true";
+        }
+      });
+    }
+
+    function filterTable() {
+      const query = normalize(input.value);
+      const rows = tbody.querySelectorAll("tr");
+
+      rows.forEach(row => {
+        if (row.dataset.originalHidden === "true") {
+          row.style.display = "none";
+          return;
+        }
+
+        if (query.length === 0) {
+          row.style.display = "";
+          return;
+        }
+
+        let match = false;
+        const cells = Array.from(row.cells);
+        const lastIndex = cells.length - 1; // 🚫 skip last column
+
+        for (let i = 0; i < lastIndex; i++) {
+          const cell = cells[i];
+          if (getComputedStyle(cell).display === "none") continue;
+
+          if (normalize(cell.innerText).includes(query)) {
+            match = true;
+            break;
+          }
+        }
+
+        row.style.display = match ? "" : "none";
+      });
+    }
+
+    const debouncedFilter = debounce(filterTable, 250);
+
+    input.addEventListener("keyup", function (e) {
+      if (e.key === "Escape") {
+        input.value = "";
+        filterTable();
+        input.blur();
+        return;
+      }
+      debouncedFilter();
+    });
+
+    markOriginallyHiddenRows();
+
+    const observer = new MutationObserver(markOriginallyHiddenRows);
+    observer.observe(tbody, { childList: true });
+
+    filterTable(); // initial
+  }
+
+  /* ---------- auto-init all searches ---------- */
+
+  document.querySelectorAll(".table-search").forEach(initTableSearch);
+
+});
+
+
+// const balanceEl = document.getElementById("balance");
+// const RATE_EUR_TO_BGN = 1.95583;
+
+// const tooltip = document.createElement("div");
+// tooltip.className = "balance-tooltip";
+// document.body.appendChild(tooltip);
+
+// balanceEl.addEventListener("mouseenter", () => {
+//     const rect = balanceEl.getBoundingClientRect();
+
+//     tooltip.style.left = rect.left + "px";
+//     tooltip.style.top = rect.top - 35 + "px";
+//     tooltip.style.opacity = "1";
+//     tooltip.innerText =
+//         `${(getCurrentBalance() * RATE_EUR_TO_BGN).toFixed(2)} BGN`;
+// });
+
+// balanceEl.addEventListener("mouseleave", () => {
+//     tooltip.style.opacity = "0";
+// });
 
 // const balance = document.querySelector(".balance-wrapper");
 // const details = document.getElementById("details");

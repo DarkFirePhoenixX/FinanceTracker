@@ -625,6 +625,25 @@ option[disabled] {
   background: #f2f2f2;
 }
 
+.table-search {
+  width: 400px;
+  margin-left: auto;
+}
+
+/* .balance-tooltip {
+    position: absolute;
+    background: #222;
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 16px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    z-index: 9999;
+} */
+
 /* .balance-wrapper {
   position: relative;
   display: inline-block;
