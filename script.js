@@ -162,11 +162,11 @@ function updateIncomeTable() {
     tbody.innerHTML = "";
 
     incomes.forEach((inc, index) => {
-        const visible = isDateInPeriod(inc.date);
-        const style = visible ? "" : "display:none;";
+        // Only render rows that are in the current period
+        if (!isDateInPeriod(inc.date)) return;
 
         tbody.innerHTML += `
-      <tr style="${style}">
+      <tr>
         <td style="font-weight:400; color: darkblue;">${inc.date}</td>
         <td style="font-weight:400;">${inc.name} 💶</td>
         <td class="income">+${inc.amount.toFixed(2)} EUR</td>
@@ -270,12 +270,11 @@ function updateTable() {
     tbody.innerHTML = "";
 
     expenses.forEach((exp, index) => {
-        // Check if the date is inside the selected period
-        const visible = isDateInPeriod(exp.date);
-        const style = visible ? "" : "display:none;";
+        // Only render rows that are in the current period
+        if (!isDateInPeriod(exp.date)) return;
 
         tbody.innerHTML += `
-      <tr style="${style}">
+      <tr>
         <td style="font-weight:400; color: darkblue;">${exp.date}</td>
         <td style="font-weight:400;">${exp.name}</td>
         <td style="font-weight:400;">${exp.category}</td>
@@ -1095,6 +1094,9 @@ function renderForecastTable() {
     const tbody = document.querySelector("#forecastTable tbody");
     tbody.innerHTML = "";
 
+    // Use DocumentFragment for better performance
+    const fragment = document.createDocumentFragment();
+
     forecastPlans.forEach((p, i) => {
         const row = document.createElement("tr");
 
@@ -1110,8 +1112,10 @@ function renderForecastTable() {
   </td>
 `;
 
-        tbody.appendChild(row);
+        fragment.appendChild(row);
     });
+
+    tbody.appendChild(fragment);
 }
 
 function updateForecastChart(startBalance) {
@@ -1558,24 +1562,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const table = document.getElementById(tableId);
     const tbody = table.querySelector("tbody");
 
-    function markOriginallyHiddenRows() {
-      tbody.querySelectorAll("tr").forEach(row => {
-        if (row.style.display === "none") {
-          row.dataset.originalHidden = "true";
-        }
-      });
-    }
-
     function filterTable() {
       const query = normalize(input.value);
       const rows = tbody.querySelectorAll("tr");
 
       rows.forEach(row => {
-        if (row.dataset.originalHidden === "true") {
-          row.style.display = "none";
-          return;
-        }
-
         if (query.length === 0) {
           row.style.display = "";
           return;
@@ -1610,11 +1601,6 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       debouncedFilter();
     });
-
-    markOriginallyHiddenRows();
-
-    const observer = new MutationObserver(markOriginallyHiddenRows);
-    observer.observe(tbody, { childList: true });
 
     filterTable(); // initial
   }
