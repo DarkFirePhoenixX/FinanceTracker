@@ -370,8 +370,8 @@ function updateChart() {
                 data,
                 backgroundColor: [
                     "#ff6384", "#36a2eb", "#ffcd56", "#4bc0c0",
-                    "#1bc244", "#9966ff", "#b042ed", "#ff9f40",
-                    "#a02afa", "#cff4ff",
+                    "#1bc244", "#6966ff", "#b042ed", "#ff9f40",
+                    "#fa2a61", "#cff4ff",
                 ],
             }],
         },
@@ -1538,79 +1538,152 @@ function parseAmount(value) {
 
 document.addEventListener("DOMContentLoaded", function () {
 
-  /* ---------- helpers ---------- */
+    /* ---------- helpers ---------- */
 
-  function debounce(fn, delay = 250) {
-    let timer;
-    return function (...args) {
-      clearTimeout(timer);
-      timer = setTimeout(() => fn.apply(this, args), delay);
-    };
-  }
-
-  function normalize(text) {
-    return text
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "");
-  }
-
-  /* ---------- core reusable initializer ---------- */
-
-  function initTableSearch(input) {
-    const tableId = input.dataset.table;
-    const table = document.getElementById(tableId);
-    const tbody = table.querySelector("tbody");
-
-    function filterTable() {
-      const query = normalize(input.value);
-      const rows = tbody.querySelectorAll("tr");
-
-      rows.forEach(row => {
-        if (query.length === 0) {
-          row.style.display = "";
-          return;
-        }
-
-        let match = false;
-        const cells = Array.from(row.cells);
-        const lastIndex = cells.length - 1; // 🚫 skip last column
-
-        for (let i = 0; i < lastIndex; i++) {
-          const cell = cells[i];
-          if (getComputedStyle(cell).display === "none") continue;
-
-          if (normalize(cell.innerText).includes(query)) {
-            match = true;
-            break;
-          }
-        }
-
-        row.style.display = match ? "" : "none";
-      });
+    function debounce(fn, delay = 250) {
+        let timer;
+        return function (...args) {
+            clearTimeout(timer);
+            timer = setTimeout(() => fn.apply(this, args), delay);
+        };
     }
 
-    const debouncedFilter = debounce(filterTable, 250);
+    function normalize(text) {
+        return text
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "");
+    }
 
-    input.addEventListener("keyup", function (e) {
-      if (e.key === "Escape") {
-        input.value = "";
-        filterTable();
-        input.blur();
-        return;
-      }
-      debouncedFilter();
-    });
+    /* ---------- core reusable initializer ---------- */
 
-    filterTable(); // initial
-  }
+    function initTableSearch(input) {
+        const tableId = input.dataset.table;
+        const table = document.getElementById(tableId);
+        const tbody = table.querySelector("tbody");
 
-  /* ---------- auto-init all searches ---------- */
+        // Determine which total element to update based on table
+        let totalElement;
+        let isExpense = false;
+        let isIncome = false;
 
-  document.querySelectorAll(".table-search").forEach(initTableSearch);
+        if (tableId === "expenseTable") {
+            totalElement = document.getElementById("expenseMonthTotal");
+            isExpense = true;
+        } else if (tableId === "incomeTable") {
+            totalElement = document.getElementById("incomeMonthTotal");
+            isIncome = true;
+        }
+
+        function filterTable() {
+            const query = normalize(input.value);
+            const rows = tbody.querySelectorAll("tr");
+            let filteredTotal = 0;
+            let visibleCount = 0;
+
+            rows.forEach(row => {
+                if (query.length === 0) {
+                    // When search is cleared, show all rows
+                    row.style.display = "";
+                    return;
+                }
+
+                let match = false;
+                const cells = Array.from(row.cells);
+                const lastIndex = cells.length - 1; // 🚫 skip last column
+
+                for (let i = 0; i < lastIndex; i++) {
+                    const cell = cells[i];
+                    if (getComputedStyle(cell).display === "none") continue;
+
+                    if (normalize(cell.innerText).includes(query)) {
+                        match = true;
+                        break;
+                    }
+                }
+
+                row.style.display = match ? "" : "none";
+
+                // Calculate total for visible rows
+                if (match) {
+                    visibleCount++;
+                    // Find the amount cell (typically has "EUR" in it)
+                    const amountCell = Array.from(cells).find(cell =>
+                        cell.innerText.includes("EUR")
+                    );
+                    if (amountCell) {
+                        // Extract number from text like "+150.00 EUR" or "-150.00 EUR"
+                        const amountText = amountCell.innerText.replace(/[^0-9.-]/g, "");
+                        const amount = parseFloat(amountText);
+                        if (!isNaN(amount)) {
+                            filteredTotal += Math.abs(amount);
+                        }
+                    }
+                }
+            });
+
+            // Update total display
+            if (query.length > 0 && totalElement) {
+                if (isExpense) {
+                    if (visibleCount == 0) {
+                        totalElement.innerHTML = "Няма намерени разходи отговарящи на текущото търсене."
+                    }
+                    else {
+                        totalElement.innerHTML =
+                            'Общо сума от ' + visibleCount + ' намерени разхода: <span class="expense" style="font-weight: 450;">-' +
+                            filteredTotal.toFixed(2) + " EUR</span>";
+                    }
+                } else if (isIncome) {
+                    if (visibleCount == 0) {
+                        totalElement.innerHTML = "Няма намерени приходи отговарящи на текущото търсене."
+                    }
+                    else {
+                        totalElement.innerHTML =
+                            'Общо сума от ' + visibleCount + ' намерени прихода: <span class="income" style="font-weight: 450;">+' +
+                            filteredTotal.toFixed(2) + " EUR</span>";
+                    }
+                }
+            } else if (query.length === 0 && totalElement) {
+                // Restore original totals when search is cleared
+                if (isExpense) {
+                    updatePeriodExpenseUI();
+                } else if (isIncome) {
+                    updatePeriodIncomeUI();
+                }
+            }
+        }
+
+        const debouncedFilter = debounce(filterTable, 250);
+
+        input.addEventListener("keyup", function (e) {
+            if (e.key === "Escape") {
+                input.value = "";
+                filterTable();
+                input.blur();
+                return;
+            }
+            debouncedFilter();
+        });
+
+        document.getElementById("clearExpenseSearch").addEventListener("click", (e) => {
+            e.preventDefault();
+            document.getElementById("expenseSearch").value = "";
+            filterTable();
+        })
+        document.getElementById("clearIncomeSearch").addEventListener("click", (e) => {
+            e.preventDefault();
+            document.getElementById("incomeSearch").value = "";
+            filterTable();
+        })
+
+        filterTable(); // initial
+    }
+
+    /* ---------- auto-init all searches ---------- */
+
+    document.querySelectorAll(".table-search").forEach(initTableSearch);
 
 });
-
 
 // const balanceEl = document.getElementById("balance");
 // const RATE_EUR_TO_BGN = 1.95583;
