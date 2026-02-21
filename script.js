@@ -621,6 +621,55 @@ document
         showPopup("Данните бяха запазени успешно!");
     });
 
+
+
+// Helper functions for search to re-render filtered results
+function renderExpenseRows() {
+    const tbody = document.querySelector("#expenseTable tbody");
+    tbody.innerHTML = "";
+
+    expenses.forEach((exp, index) => {
+        if (!isDateInPeriod(exp.date)) return;
+
+        tbody.innerHTML += `
+      <tr>
+        <td style="font-weight:400; color: darkblue;">${exp.date}</td>
+        <td style="font-weight:400;">${exp.name}</td>
+        <td style="font-weight:500;">${exp.category}</td>
+        <td class="expense">-${exp.amount.toFixed(2)} EUR</td>
+        <td style="font-weight:500;">${exp.expensePaymentStyle}</td>
+        <td style="width: 350px;">
+          <button class="edit-btn" onclick="editExpense(${index})">Редактирай ✏️</button>
+          <button class="copy-btn" onclick="copyExpense(${index})">Дублирай 📋</button>
+          <button class="delete-btn" onclick="deleteExpense(${index})">Премахни 🗑️</button>
+        </td>
+      </tr>
+    `;
+    });
+}
+
+function renderIncomeRows() {
+    const tbody = document.querySelector("#incomeTable tbody");
+    tbody.innerHTML = "";
+
+    incomes.forEach((inc, index) => {
+        if (!isDateInPeriod(inc.date)) return;
+
+        tbody.innerHTML += `
+      <tr>
+        <td style="font-weight:400; color: darkblue;">${inc.date}</td>
+        <td style="font-weight:400;">${inc.name} 💶</td>
+        <td class="income">+${inc.amount.toFixed(2)} EUR</td>
+        <td style="font-weight:500;">${inc.incomePaymentStyle}</td>
+        <td style="width: 350px;">
+          <button class="edit-btn" onclick="editIncome(${index})">Редактирай ✏️</button>
+          <button class="copy-btn" onclick="copyIncome(${index})">Дублирай 📋</button>
+          <button class="delete-btn" onclick="deleteIncome(${index})">Премахни 🗑️</button>
+        </td>
+      </tr>`;
+    });
+}
+
 function deleteExpense(index) {
     expenses.splice(index, 1);
     saveAll();
@@ -1559,101 +1608,116 @@ document.addEventListener("DOMContentLoaded", function () {
             .replace(/[\u0300-\u036f]/g, "");
     }
 
-    /* ---------- core reusable initializer ---------- */
+        /* ---------- core reusable initializer ---------- */
 
     function initTableSearch(input) {
         const tableId = input.dataset.table;
         const table = document.getElementById(tableId);
         const tbody = table.querySelector("tbody");
 
-        // Determine which total element to update based on table
-        let totalElement;
+        // Determine which data array and functions to use
+        let dataArray, renderFunction, updateTotalFunction;
         let isExpense = false;
         let isIncome = false;
 
         if (tableId === "expenseTable") {
-            totalElement = document.getElementById("expenseMonthTotal");
+            dataArray = expenses;
+            renderFunction = renderExpenseRows;
+            updateTotalFunction = updatePeriodExpenseUI;
             isExpense = true;
         } else if (tableId === "incomeTable") {
-            totalElement = document.getElementById("incomeMonthTotal");
+            dataArray = incomes;
+            renderFunction = renderIncomeRows;
+            updateTotalFunction = updatePeriodIncomeUI;
             isIncome = true;
         }
 
         function filterTable() {
             const query = normalize(input.value);
-            const rows = tbody.querySelectorAll("tr");
-            let filteredTotal = 0;
-            let visibleCount = 0;
 
-            rows.forEach(row => {
-                if (query.length === 0) {
-                    // When search is cleared, show all rows
-                    row.style.display = "";
-                    return;
-                }
+            if (query.length === 0) {
+                // No search - render all period-filtered data
+                renderFunction();
+                updateTotalFunction();
+                return;
+            }
 
-                let match = false;
-                const cells = Array.from(row.cells);
-                const lastIndex = cells.length - 1; // 🚫 skip last column
+            // Filter data based on search query
+            const filteredData = dataArray.filter(item => {
+                if (!isDateInPeriod(item.date)) return false; // Only search in current period
+                
+                // Search in all fields except actions
+                const searchableText = [
+                    item.date,
+                    item.name,
+                    item.amount?.toString(),
+                    item.category || '',
+                    item.expensePaymentStyle || item.incomePaymentStyle || ''
+                ].join(' ').toLowerCase();
 
-                for (let i = 0; i < lastIndex; i++) {
-                    const cell = cells[i];
-                    if (getComputedStyle(cell).display === "none") continue;
-
-                    if (normalize(cell.innerText).includes(query)) {
-                        match = true;
-                        break;
-                    }
-                }
-
-                row.style.display = match ? "" : "none";
-
-                // Calculate total for visible rows
-                if (match) {
-                    visibleCount++;
-                    // Find the amount cell (typically has "EUR" in it)
-                    const amountCell = Array.from(cells).find(cell =>
-                        cell.innerText.includes("EUR")
-                    );
-                    if (amountCell) {
-                        // Extract number from text like "+150.00 EUR" or "-150.00 EUR"
-                        const amountText = amountCell.innerText.replace(/[^0-9.-]/g, "");
-                        const amount = parseFloat(amountText);
-                        if (!isNaN(amount)) {
-                            filteredTotal += Math.abs(amount);
-                        }
-                    }
-                }
+                return normalize(searchableText).includes(query);
             });
 
+            // Re-render table with filtered data
+            tbody.innerHTML = "";
+            const fragment = document.createDocumentFragment();
+            let filteredTotal = 0;
+
+            filteredData.forEach(item => {
+                const originalIndex = dataArray.indexOf(item);
+                const tr = document.createElement('tr');
+                
+                if (isExpense) {
+                    tr.innerHTML = `
+                        <td style="font-weight:400; color: darkblue;">${item.date}</td>
+                        <td style="font-weight:400;">${item.name}</td>
+                        <td style="font-weight:500;">${item.category}</td>
+                        <td class="expense">-${item.amount.toFixed(2)} EUR</td>
+                        <td style="font-weight:500;">${item.expensePaymentStyle}</td>
+                        <td style="width: 350px;">
+                            <button class="edit-btn" onclick="editExpense(${originalIndex})">Редактирай ✏️</button>
+                            <button class="copy-btn" onclick="copyExpense(${originalIndex})">Дублирай 📋</button>
+                            <button class="delete-btn" onclick="deleteExpense(${originalIndex})">Премахни 🗑️</button>
+                        </td>
+                    `;
+                } else if (isIncome) {
+                    tr.innerHTML = `
+                        <td style="font-weight:400; color: darkblue;">${item.date}</td>
+                        <td style="font-weight:400;">${item.name} 💶</td>
+                        <td class="income">+${item.amount.toFixed(2)} EUR</td>
+                        <td style="font-weight:500;">${item.incomePaymentStyle}</td>
+                        <td style="width: 350px;">
+                            <button class="edit-btn" onclick="editIncome(${originalIndex})">Редактирай ✏️</button>
+                            <button class="copy-btn" onclick="copyIncome(${originalIndex})">Дублирай 📋</button>
+                            <button class="delete-btn" onclick="deleteIncome(${originalIndex})">Премахни 🗑️</button>
+                        </td>
+                    `;
+                }
+                
+                fragment.appendChild(tr);
+                filteredTotal += item.amount;
+            });
+
+            tbody.appendChild(fragment);
+
             // Update total display
-            if (query.length > 0 && totalElement) {
-                if (isExpense) {
-                    if (visibleCount == 0) {
-                        totalElement.innerHTML = "Няма намерени разходи отговарящи на текущото търсене."
-                    }
-                    else {
-                        totalElement.innerHTML =
-                            'Общо сума от ' + visibleCount + ' намерени разхода: <span class="expense" style="font-weight: 450;">-' +
-                            filteredTotal.toFixed(2) + " EUR</span>";
-                    }
-                } else if (isIncome) {
-                    if (visibleCount == 0) {
-                        totalElement.innerHTML = "Няма намерени приходи отговарящи на текущото търсене."
-                    }
-                    else {
-                        totalElement.innerHTML =
-                            'Общо сума от ' + visibleCount + ' намерени прихода: <span class="income" style="font-weight: 450;">+' +
-                            filteredTotal.toFixed(2) + " EUR</span>";
-                    }
-                }
-            } else if (query.length === 0 && totalElement) {
-                // Restore original totals when search is cleared
-                if (isExpense) {
-                    updatePeriodExpenseUI();
-                } else if (isIncome) {
-                    updatePeriodIncomeUI();
-                }
+            const totalElement = isExpense ? 
+                document.getElementById("expenseMonthTotal") : 
+                document.getElementById("incomeMonthTotal");
+
+            if (filteredData.length === 0) {
+                totalElement.innerHTML = isExpense ? 
+                    "Няма намерени разходи отговарящи на текущото търсене." :
+                    "Няма намерени приходи отговарящи на текущото търсене.";
+            } else {
+                const label = isExpense ? 
+                    `Общо сума от ${filteredData.length} намерени разхода:` :
+                    `Общо сума от ${filteredData.length} намерени прихода:`;
+                const className = isExpense ? "expense" : "income";
+                const sign = isExpense ? "-" : "+";
+                
+                totalElement.innerHTML = 
+                    `${label} <span class="${className}" style="font-weight: 450;">${sign}${filteredTotal.toFixed(2)} EUR</span>`;
             }
         }
 
@@ -1668,17 +1732,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             debouncedFilter();
         });
-
-        document.getElementById("clearExpenseSearch").addEventListener("click", (e) => {
-            e.preventDefault();
-            document.getElementById("expenseSearch").value = "";
-            filterTable();
-        })
-        document.getElementById("clearIncomeSearch").addEventListener("click", (e) => {
-            e.preventDefault();
-            document.getElementById("incomeSearch").value = "";
-            filterTable();
-        })
 
         filterTable(); // initial
     }
@@ -1772,5 +1825,28 @@ document.addEventListener("keydown", function (e) {
     if (e.button === 2) { // Right-click
         e.preventDefault();
         return false;
+    }
+});
+// Clear search button handlers
+document.addEventListener("DOMContentLoaded", function() {
+    const clearIncomeBtn = document.getElementById("clearIncomeSearch");
+    const clearExpenseBtn = document.getElementById("clearExpenseSearch");
+    
+    if (clearIncomeBtn) {
+        clearIncomeBtn.addEventListener("click", function(e) {
+            e.preventDefault();
+            const searchInput = document.getElementById("incomeSearch");
+            searchInput.value = "";
+            searchInput.dispatchEvent(new Event("keyup"));
+        });
+    }
+    
+    if (clearExpenseBtn) {
+        clearExpenseBtn.addEventListener("click", function(e) {
+            e.preventDefault();
+            const searchInput = document.getElementById("expenseSearch");
+            searchInput.value = "";
+            searchInput.dispatchEvent(new Event("keyup"));
+        });
     }
 });
