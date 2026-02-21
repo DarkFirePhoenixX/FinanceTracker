@@ -70,6 +70,10 @@ const chartPicker = flatpickr("#chartPeriodPicker", {
     }
 });
 
+function removeParentheses(str) {
+  return str.replace(/\s*\([^)]*\)/g, '').trim();
+}
+
 /* ---------------- ДАННИ ---------------- */
 let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
 // let subcategories =
@@ -201,7 +205,7 @@ function editIncome(index) {
 function copyIncome(index) {
     // originalScroll = window.scrollY;
     const inc = incomes[index];
-    document.getElementById("incomeName").value = inc.name;
+    document.getElementById("incomeName").value = removeParentheses(inc.name);
     document.getElementById("incomePaymentStyle").value = inc.incomePaymentStyle;
     document.getElementById("incomePaymentStyle").dispatchEvent(new Event("change"));
     incomeHeader.classList.add("asc");
@@ -655,7 +659,7 @@ function editExpense(index) {
 function copyExpense(index) {
     // originalScroll = window.scrollY;
     const exp = expenses[index];
-    document.getElementById("name").value = exp.name;
+    document.getElementById("name").value = removeParentheses(exp.name);
     document.getElementById("category").value = exp.category;
     document.getElementById("category").dispatchEvent(new Event("change"));
     document.getElementById("expensePaymentStyle").value = exp.expensePaymentStyle;
