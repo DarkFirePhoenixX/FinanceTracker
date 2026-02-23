@@ -628,8 +628,13 @@ function renderExpenseRows() {
     const tbody = document.querySelector("#expenseTable tbody");
     tbody.innerHTML = "";
 
-    expenses.forEach((exp, index) => {
-        if (!isDateInPeriod(exp.date)) return;
+    // Filter and sort by date (newest first)
+    const visibleExpenses = expenses
+        .filter(exp => isDateInPeriod(exp.date))
+        .sort((a, b) => parseDMY(b.date) - parseDMY(a.date));
+
+    visibleExpenses.forEach((exp) => {
+        const index = expenses.indexOf(exp);
 
         tbody.innerHTML += `
       <tr>
@@ -652,8 +657,13 @@ function renderIncomeRows() {
     const tbody = document.querySelector("#incomeTable tbody");
     tbody.innerHTML = "";
 
-    incomes.forEach((inc, index) => {
-        if (!isDateInPeriod(inc.date)) return;
+    // Filter and sort by date (newest first)
+    const visibleIncomes = incomes
+        .filter(inc => isDateInPeriod(inc.date))
+        .sort((a, b) => parseDMY(b.date) - parseDMY(a.date));
+
+    visibleIncomes.forEach((inc) => {
+        const index = incomes.indexOf(inc);
 
         tbody.innerHTML += `
       <tr>
@@ -1658,6 +1668,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 return normalize(searchableText).includes(query);
             });
 
+            // Sort filtered data by date (newest first)
+            filteredData.sort((a, b) => {
+                const dateA = parseDMY(a.date);
+                const dateB = parseDMY(b.date);
+                return dateB - dateA; // Descending order (newest first)
+            });
+
             // Re-render table with filtered data
             tbody.innerHTML = "";
             const fragment = document.createDocumentFragment();
@@ -1710,9 +1727,18 @@ document.addEventListener("DOMContentLoaded", function () {
                     "Няма намерени разходи отговарящи на текущото търсене." :
                     "Няма намерени приходи отговарящи на текущото търсене.";
             } else {
-                const label = isExpense ? 
-                    `Общо сума от ${filteredData.length} намерени разхода:` :
-                    `Общо сума от ${filteredData.length} намерени прихода:`;
+                // Singular vs plural logic
+                let label;
+                if (filteredData.length === 1) {
+                    label = isExpense ? 
+                        `Обща сума от ${filteredData.length} намерен разход:` :
+                        `Обща сума от ${filteredData.length} намерен приход:`;
+                } else {
+                    label = isExpense ? 
+                        `Обща сума от ${filteredData.length} намерени разхода:` :
+                        `Обща сума от ${filteredData.length} намерени прихода:`;
+                }
+                
                 const className = isExpense ? "expense" : "income";
                 const sign = isExpense ? "-" : "+";
                 
